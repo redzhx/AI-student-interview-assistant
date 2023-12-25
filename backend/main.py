@@ -21,6 +21,7 @@ import uvicorn
 
 app = FastAPI()
 openai_services = OpenAIServices()
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
 
 
 #Dependency
@@ -49,19 +50,21 @@ models.Base.metadata.create_all(bind=engine)
 # CORS 配置
 
 # CORS配置
+# 允许的源列表
 origins = [
+    FRONTEND_URL,
     "http://localhost:3000",  # React应用运行地址
     "http://127.0.0.1:3000",
 ]
 
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # 允许的源
+    allow_origins=origins,  # 使用 origins 列表
     allow_credentials=True,
-    allow_methods=["*"],  # 允许的方法
-    allow_headers=["*"],  # 允许的头部
+    allow_methods=["*"],  # 允许所有方法
+    allow_headers=["*"],  # 允许所有头部
 )
-
 
 # 设置静态文件目录
 app.mount("/static", StaticFiles(directory="../frontend/build"), name="static")

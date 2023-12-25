@@ -6,3 +6,4 @@ Requests==2.31.0
 SQLAlchemy==2.0.18
 uvicorn==0.25.0
 zhipuai==1.0.7
+python-multipart==0.0.5
