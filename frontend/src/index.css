@@ -1,0 +1,18 @@
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont,  sans-serif,  'Spartan','Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    'PingFang SC', 'Microsoft YaHei', Arial; 
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: whitesmoke;
+
+
+
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}

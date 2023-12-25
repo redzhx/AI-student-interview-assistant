@@ -1,0 +1,120 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+
+.App-header {
+  background-color: #2973e2;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+body {
+  margin: 0;
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.5;
+  color: #4A5073;
+  text-align: left;
+  background-color: #fafcff;
+}
+
+button {
+  margin-right: 10px; /* 设置按钮右侧的间距 */
+}
+
+.footer {
+  text-align: center;
+  margin-top: auto; /* 将页脚顶部距离上方内容自动拉伸 */
+  font-family: "Arial", sans-serif; /* 使用 Arial 字体，如果系统中没有 Arial 字体，则使用 sans-serif 作为备用字体 */
+  font-size: 12px; /* 设置字体大小 */
+  font-weight: normal; /* 设置字体粗细，可以是 normal、bold、lighter 等 */
+  color: #a6a8ab; /* 设置字体颜色 */
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+
+.break-words {
+  white-space: pre-wrap;
+}
+
+.card.title {
+  text-align: left;
+}
+
+/* 历史记录card */
+/* 设置默认背景颜色 */
+.card-header {
+  background-color: #f8f9fa;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.3s; /* 添加过渡动画效果 */
+}
+
+/* 鼠标悬停时改变背景颜色 */
+.card-header:hover {
+  background-color: #cfe2ff; /* 鼠标悬停时的背景颜色 */
+}
+
+
+/* control panel */
+.control-panel {
+  background-color: #f8f9fa; /* 浅灰色背景 */
+  border-radius: 8px; /* 圆角边框 */
+  padding: 20px; /* 内部间距 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+  margin-bottom: 20px; /* 下方间距 */
+}
+
+.control-panel .form-group {
+  margin-bottom: 15px; /* 表单组件之间的间距 */
+}
+
+.control-panel .form-label {
+  font-weight: bold; /* 标签字体加粗 */
+  color: #333; /* 标签字体颜色 */
+}
+
+.control-panel .form-control {
+  border-radius: 4px; /* 输入框圆角 */
+}
+/* end of control panel */
+
+
+
+#answerarea{
+  height: 180px;
+
+}
