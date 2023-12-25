@@ -1,6 +1,5 @@
 // AnswerSection-old.jsx
 import React, { useState, useRef, useEffect } from 'react';
-import AudioRecorder from './AudioRecorder';
 import TextInput from './TextInput';
 import axios from 'axios';
 import { Button, Spinner } from 'react-bootstrap';
@@ -18,16 +17,14 @@ function AnswerSection({ onAnswerSubmit,disabled,onTranscriptReady }) {
   const [isRecordingMode, setIsRecordingMode] = useState(true); // 默认为录音模式
   const countdownTimerRef = useRef(null);
   const mediaRecorderRef = useRef(null);
+  const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
-  const [showTextInput, setShowTextInput] = useState(false);
-  // const [answer, setAnswer] = useState(''); // 正确声明 answer 状态和 setAnswer 函数
-
-    const handleAudioTranscriptReady = (transcript, audioUrl) => {
-    //   setIsRecording(false); // 停止录音
-      setTranscript(transcript); // 设置转写文本
-      setAudioUrl(audioUrl); // 设置录音文件的 URL
-      onAnswerSubmit(transcript); // 提交答案进行评价
-  };
+//     const handleAudioTranscriptReady = (transcript, audioUrl) => {
+//     //   setIsRecording(false); // 停止录音
+//       setTranscript(transcript); // 设置转写文本
+//       setAudioUrl(audioUrl); // 设置录音文件的 URL
+//       onAnswerSubmit(transcript); // 提交答案进行评价
+//   };
 
     // const toggleAnswerMode = () => {
     //     setIsRecording(!isRecording);
@@ -45,7 +42,7 @@ function AnswerSection({ onAnswerSubmit,disabled,onTranscriptReady }) {
       if (countdown === 0 && isRecording) {
           stopRecording();
       }
-  }, [countdown, isRecording]);
+  }, [countdown, isRecording,]);
 
   useEffect(() => {
       return () => {
@@ -104,7 +101,7 @@ function AnswerSection({ onAnswerSubmit,disabled,onTranscriptReady }) {
       formData.append("audioFile", audioBlob, "audio.mp3");
 
       try {
-          const response = await axios.post('http://localhost:8000/api/upload-audio', formData, {
+          const response = await axios.post(`${apiUrl}/api/upload-audio`, formData, {
               headers: {
                   'Content-Type': 'multipart/form-data',
               },

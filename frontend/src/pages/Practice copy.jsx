@@ -6,11 +6,10 @@ import QuestionDisplay from '../components/QuestionDisplay';
 import AnswerSection from '../components/AnswerSection-0';
 import GenerateSection from '../components/GenerateSection';
 import { useSettings } from '../components/SettingsContext';
-import { Container,Row,Button, Card,Col,Collapse, CardHeader } from 'react-bootstrap'; // 确保这一行存在于文件顶部
+import { Container,Row,Button, Card,Col,Collapse,  } from 'react-bootstrap'; // 确保这一行存在于文件顶部
 import PracticeEndModal from '../components/PracticeEndModal';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 // import '../App.css';
-const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
 
 function Practice() {
@@ -35,7 +34,7 @@ function Practice() {
     // 获取问题的函数
     const fetchAndPlayQuestion = async () => {
       try {
-          const response = await axios.get(`${apiUrl}/api/get-question`);
+          const response = await axios.get('http://localhost:8000/api/get-question');
           if (response.data) {
               setCurrentQuestion(response.data);
               setIsAnsweringAllowed(true);
@@ -62,7 +61,7 @@ const handleHintRequest = async () => {
   setLoadingHint(true);
 
       try {
-          const response = await axios.post(`${apiUrl}/api/generate-hint`, { 
+          const response = await axios.post('http://localhost:8000/api/generate-hint', { 
               question: currentQuestion.question,
               ai: aiChoice
           });
@@ -87,9 +86,9 @@ const handleHintRequest = async () => {
     setQuestionCount(questionCount + 1); // 递增答题计数器
   };
 
-  const handleReset = () => {
-    fetchAndPlayQuestion(); // 使用新的问题获取函数
-};
+//   const handleReset = () => {
+//     fetchAndPlayQuestion(); // 使用新的问题获取函数
+// };
 
 const endPractice = () => {
   setShowEndModal(true);

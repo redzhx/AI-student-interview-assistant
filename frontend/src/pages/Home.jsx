@@ -38,7 +38,7 @@ function Home() {
           </div>
         </Col>
         <Col lg={5}>
-          <img src="/interview.png" alt="Image 1" className="img-fluid mt-4" />
+          <img src="/interview.png" alt="home" className="img-fluid mt-4" />
         </Col>
       </Row>
     </Container>

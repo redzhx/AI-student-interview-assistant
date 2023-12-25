@@ -12,6 +12,8 @@ function Interview({ ttsService }) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answer, setAnswer] = useState('');
   const [evaluation, setEvaluation] = useState('');
+  const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+
 
   useEffect(() => {
     fetchInterviewQuestions();
@@ -19,7 +21,7 @@ function Interview({ ttsService }) {
 
   const fetchInterviewQuestions = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/get-interview');
+      const response = await axios.get(`${apiUrl}/api/get-interview`);
       if (response.data && response.data.length > 0) {
         setInterviewQuestions(response.data);
         setCurrentQuestionIndex(0);

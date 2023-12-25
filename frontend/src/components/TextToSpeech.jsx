@@ -5,6 +5,7 @@ import axios from 'axios';
 function TextToSpeech() {
     const [text, setText] = useState('');
     const [ttsService, setTtsService] = useState('browser'); // 默认使用浏览器API
+    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
     const handleTextToSpeech = async () => {
         if (ttsService === 'browser') {
@@ -13,7 +14,7 @@ function TextToSpeech() {
         } else if (ttsService === 'server') {
             try {
                 // 假设后端API路径是 '/api/text-to-speech'
-                const response = await axios.post('http://localhost:8000/api/text-to-speech', { text });
+                const response = await axios.post(`${apiUrl}/api/text-to-speech`, { text });
                 // 播放返回的音频文件
                 const audioUrl = URL.createObjectURL(response.data);
                 const audio = new Audio(audioUrl);
@@ -22,7 +23,6 @@ function TextToSpeech() {
                 console.error('Error with server TTS:', error);
             }
         }
-        // 处理其他API...
     };
 
     return (

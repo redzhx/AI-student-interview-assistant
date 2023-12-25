@@ -7,6 +7,7 @@ import { useSettings } from './SettingsContext';
 function QuestionDisplay({ question, ttsService,  }) {
     const audioRef = useRef(null);
     const { isMuted } = useSettings(); // 获取静音模式状态 stopAudio 上面括号里去掉了
+    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
     useEffect(() => {
         if (question && !isMuted) {
@@ -34,12 +35,12 @@ function QuestionDisplay({ question, ttsService,  }) {
                 speechSynthesis.speak(utterance);
                 break;
             case 'minimax':
-                axios.post('http://localhost:8000/api/text-to-speech/minimax', { text }, { responseType: 'blob' })
+                axios.post(`${apiUrl}/api/text-to-speech/minimax`, { text }, { responseType: 'blob' })
                     .then(response => playAudioBlob(response.data))
                     .catch(error => console.error('Error with Minimax TTS:', error));
                 break;
             case 'openai':
-                axios.post('http://localhost:8000/api/text-to-speech', { text }, { responseType: 'blob' })
+                axios.post(`${apiUrl}//api/text-to-speec`, { text }, { responseType: 'blob' })
                     .then(response => playAudioBlob(response.data))
                     .catch(error => console.error('Error with OpenAI TTS:', error));
                 break;

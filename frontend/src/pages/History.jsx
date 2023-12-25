@@ -9,12 +9,13 @@ function History() {
   const [openCollapse, setOpenCollapse] = useState({});
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [recordToDelete, setRecordToDelete] = useState(null);
+  const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
   useEffect(() => {
     const fetchRecords = async () => {
       // 获取历史记录数据的逻辑
       try {
-        const response = await axios.get('http://localhost:8000/api/history');
+        const response = await axios.get(`${apiUrl}/api/history`);
         if (Array.isArray(response.data)) {
           setRecords(response.data.map(record => ({...record, open: false})));
         } else {
@@ -34,7 +35,7 @@ function History() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/api/delete/${id}`);
+      await axios.delete(`${apiUrl}/api/delete/${id}`);
       setRecords(records.filter(record => record.id !== id));
     } catch (error) {
       console.error('Error deleting record:', error);
