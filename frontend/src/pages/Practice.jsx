@@ -31,6 +31,7 @@ function Practice() {
   const [open, setOpen] = useState(false);  // 控制折叠面板的开关
   const [loadingHint, setLoadingHint] = useState(false);
 
+  const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
     // 获取问题的函数
     const fetchAndPlayQuestion = async () => {
