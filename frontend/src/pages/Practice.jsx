@@ -6,7 +6,7 @@ import QuestionDisplay from '../components/QuestionDisplay';
 import AnswerSection from '../components/AnswerSection-0';
 import GenerateSection from '../components/GenerateSection';
 import { useSettings } from '../components/SettingsContext';
-import { Container,Row,Button, Card,Col,Collapse, CardHeader } from 'react-bootstrap'; // 确保这一行存在于文件顶部
+import { Container,Row,Button, Card,Col,Collapse, Spinner } from 'react-bootstrap'; // 确保这一行存在于文件顶部
 import PracticeEndModal from '../components/PracticeEndModal';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 // import '../App.css';
@@ -115,36 +115,44 @@ const endPractice = () => {
           
       {currentQuestion.question && (
         <>
-          <Row className='my-4'>
-         
+          <Row className='my-3'>
             <Col md={12} className=" mb-3 ">
               {/* <Card>
                 <Card.Body className=' '> */}
                   <h5 className="bold "><QuestionDisplay question={currentQuestion.question} ttsService={ttsService} /></h5>
                 {/* </Card.Body>
               </Card>*/}
-            </Col> 
-          </Row>
-          <Row className="mb-3">
-            {/*  */}
-                <Button
+               <Button variant="outline-primary" className="my-2" size="sm" 
                     onClick={handleHintRequest}
                     disabled={loadingHint}
                 >
-                    {open ? '换个提示' : '显示提示'}
+                    {open ? '💡换个提示' : '💡给点提示'}
                 </Button>
-            </Row>
-            <Row>
-          
+            </Col> 
+          </Row>
+          <Row>
+            <Col md={12}>
+            <Card onClick={() => setOpen(!open)}>
+            <Card.Header>
+                <span>💡提示</span>
+              </Card.Header>
                 <Collapse in={open}>
-                  <div>
-                        <Card.Body style={{   whiteSpace: 'pre-line',textAlign: 'left' }}>
-                            {loadingHint ? '加载中...' : `💡提示: ${hint}`}
-                        </Card.Body>
+                  <div className="collapse-content">
+                      <Card.Body style={{   whiteSpace: 'pre-line',textAlign: 'left' }}>
+                      {loadingHint ? 
+                      <div className="text-center">
+                        <Spinner animation="border" role="status">
+                            <span className="sr-only">加载中...</span>
+                        </Spinner>
+                    </div>
+                    : ` ${hint}`
+                  }
+                    </Card.Body>
                   </div>
                 </Collapse>
-               
-            </Row>
+               </Card>
+            </Col>
+          </Row>
           <Row>
             <Col md={12} className="mb-3">
               {/* <Card>

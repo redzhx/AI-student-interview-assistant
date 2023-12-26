@@ -118,3 +118,25 @@ button {
   height: 180px;
 
 }
+
+
+.card-header-flex {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-header-flex .header-content {
+  flex-grow: 1;
+}
+
+.card-header-flex .arrow-icon {
+  margin: 0 5px;
+  /* 根据需要添加更多样式，比如右侧的边距 */
+}
+
+
+.collapse-content {
+  margin-bottom: 15px; 
+}

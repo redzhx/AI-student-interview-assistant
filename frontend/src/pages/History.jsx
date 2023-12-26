@@ -70,9 +70,23 @@ function History() {
         {/* accordion */}
         {records.map((record, index) => (
           <Card  key={record.id} style={{ margin: '5px 20px' }}>
-            <Card.Header  onClick={() => handleToggleCollapse(index)} style={{ cursor: 'pointer', textAlign: 'left' }}>
-              <strong >{record.question}</strong> 
-              <p className="mb-0" ><small className="text-muted">{new Date(record.created_at).toLocaleString()}</small></p>
+            <Card.Header 
+              className="card-header-flex"
+              onClick={() => handleToggleCollapse(index)}
+            >
+              <div className="card-header-top">
+              <p className="mb-0"><small className="text-muted">{new Date(record.created_at).toLocaleString()}</small></p>
+
+                <strong>{record.question}</strong>
+              </div>
+              <span className="arrow-icon">
+                  {openCollapse[index] ? (
+                    <i class="fa-solid fa-chevron-up"></i> // 展开时显示向上的箭头
+                  ) : (
+                    <i class="fa-solid fa-chevron-down"></i>  // 折叠时显示向下的箭头
+                  )}
+                </span>
+            
             </Card.Header>
             <Collapse in={openCollapse[index]}>
               <div>

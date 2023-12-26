@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button, Alert } from 'react-bootstrap';
 import Footer from '../components/Footer.jsx';
 import Feature from '../components/Feature.jsx';
 
@@ -37,8 +37,15 @@ function Home() {
             </div>
           </div>
         </Col>
+        
         <Col lg={5}>
           <img src="/interview.png" alt="home" className="img-fluid mt-4" />
+        </Col>
+        
+      </Row>
+      <Row className="justify-content-md-center my-5"  >
+      <Col  md="8">            
+        <Alert variant='primary'>🚧此应用处于测试阶段,如果看不到出题与记录页面，那一定是后端在睡觉，请原谅它，毕竟是免费的。 刷新页面等一会儿，它很快就醒来工作了。</Alert>
         </Col>
       </Row>
     </Container>
