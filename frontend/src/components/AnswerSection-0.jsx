@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Button, Spinner } from 'react-bootstrap';
 import '../App.css';
 
-function AnswerSection({ onAnswerSubmit,disabled,onTranscriptReady }) {
+function AnswerSection({ onAnswerSubmit,disabled, }) {
 
   const [isRecording, setIsRecording] = useState(false);
   const [audioUrl, setAudioUrl] = useState(null); // 定义 audioUrl 状态

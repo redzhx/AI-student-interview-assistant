@@ -40,7 +40,7 @@ function QuestionDisplay({ question, ttsService,  }) {
                     .catch(error => console.error('Error with Minimax TTS:', error));
                 break;
             case 'openai':
-                axios.post(`${apiUrl}//api/text-to-speec`, { text }, { responseType: 'blob' })
+                axios.post(`${apiUrl}/api/text-to-speech`, { text }, { responseType: 'blob' })
                     .then(response => playAudioBlob(response.data))
                     .catch(error => console.error('Error with OpenAI TTS:', error));
                 break;

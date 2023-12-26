@@ -1,13 +1,16 @@
 // GenerateSection.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useSettings } from './SettingsContext';
+
 import { Button } from 'react-bootstrap';
 
-function GenerateSection({ question, answer, onEvaluationGenerated, evaluationService, disabled }) {
-    const [aiChoice, setAiChoice] = useState('zhipuai');
+function GenerateSection({ currentQuestion, answer, onEvaluationGenerated, disabled }) {
+    const { aiChoice } = useSettings();
     const [evaluation, setEvaluation] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+    const questionText = currentQuestion.question; // 从 currentQuestion 对象中提取问题文本
 
 
     const saveRecord = async (questionText, answerText, evaluationText) => {
@@ -34,7 +37,8 @@ function GenerateSection({ question, answer, onEvaluationGenerated, evaluationSe
 
         try {
             const response = await axios.post(`${apiUrl}/api/generate`, {
-                prompt: answer, // 使用传入的答案
+                question: currentQuestion.question,  // 当前问题
+                user_response: answer, // 使用传入的答案
                 ai: aiChoice
             });
             setEvaluation(response.data);
@@ -42,7 +46,7 @@ function GenerateSection({ question, answer, onEvaluationGenerated, evaluationSe
                 onEvaluationGenerated(response.data); // 通知父组件生成的评价
             }
             // 保存答题记录
-            saveRecord(question, answer, response.data); 
+            saveRecord(currentQuestion.question, answer, response.data); 
             setIsLoading(false);
         } catch (error) {
             console.error('Error generating evaluation:', error);}
@@ -64,7 +68,6 @@ function GenerateSection({ question, answer, onEvaluationGenerated, evaluationSe
             >
             {isLoading ? '生成中...' : '生成评价'}
         </Button>
-        {/* {evaluation && <div>{evaluation}</div>} */}
       </div>
     );
 }

@@ -8,12 +8,12 @@ export const useSettings = () => useContext(SettingsContext);
 export const SettingsProvider = ({ children }) => {
   const [ttsService, setTtsService] = useState('minimax');
   const [sttService, setSttService] = useState('openai');
-  const [evaluationService, setEvaluationService] = useState('zhipuai');
+  const [aiChoice, setAiChoice] = useState('zhipuai');
   const [isMuted, setIsMuted] = useState(false); // 添加静音模式的状态
 
 
   return (
-    <SettingsContext.Provider value={{ ttsService, setTtsService, sttService, setSttService, evaluationService, setEvaluationService,isMuted, setIsMuted }}>
+    <SettingsContext.Provider value={{ ttsService, setTtsService, sttService, setSttService, aiChoice, setAiChoice, isMuted, setIsMuted }}>
       {children}
     </SettingsContext.Provider>
   );

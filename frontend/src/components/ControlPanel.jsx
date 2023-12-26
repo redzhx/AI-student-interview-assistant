@@ -5,7 +5,7 @@ import { useSettings } from './SettingsContext'; // 确保路径正确
 
 function ControlPanel() {
 
-const { isMuted, setIsMuted,ttsService, setTtsService, sttService, setSttService, evaluationService, setEvaluationService } = useSettings();
+  const { isMuted, setIsMuted, ttsService, setTtsService, sttService, setSttService, aiChoice, setAiChoice } = useSettings();
   
   return (
     <div className="control-panel">
@@ -40,8 +40,8 @@ const { isMuted, setIsMuted,ttsService, setTtsService, sttService, setSttService
               <Form.Label>生成评价服务</Form.Label>
               <Form.Control 
                 as="select" 
-                value={evaluationService}
-                onChange={(e) => setEvaluationService(e.target.value)}
+                value={aiChoice}
+                onChange={(e) => setAiChoice(e.target.value)}
               >
                 <option value="zhipuai">Zhipuai</option>
                 <option value="openai">OpenAI</option>

@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import QuestionDisplay from '../components/QuestionDisplay';
-// import AnswerSection from '../components/AnswerSection';
 import AnswerSection from '../components/AnswerSection-0';
 import GenerateSection from '../components/GenerateSection';
 import { useSettings } from '../components/SettingsContext';
@@ -10,26 +9,22 @@ import { Container,Row,Button, Card,Col,Collapse, Spinner } from 'react-bootstra
 import PracticeEndModal from '../components/PracticeEndModal';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 // import '../App.css';
-const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
-
 
 function Practice() {
   const [currentQuestion, setCurrentQuestion] = useState({});
   const [answer, setAnswer] = useState(''); // 用户的回答
   const [evaluation, setEvaluation] = useState('');
-  const [isAnsweringAllowed, setIsAnsweringAllowed] = useState(true);
-  const { ttsService, sttService, evaluationService } = useSettings();
-  const [audioUrl, setAudioUrl] = useState(''); // 新增状态以存储音频 URL
   const [isEvaluationGenerated, setIsEvaluationGenerated] = useState(false);
   const [isQuestionGenerated, setIsQuestionGenerated] = useState(false);
   const [questionCount, setQuestionCount] = useState(0);
-
   const [resetKey, setResetKey] = useState(0); // 添加一个用于重置的状态
   const [showEndModal, setShowEndModal] = useState(false);
-  const [aiChoice, setAiChoice] = useState('zhipuai');
+  const { aiChoice } = useSettings();
   const [hint, setHint] = useState('');
   const [open, setOpen] = useState(false);  // 控制折叠面板的开关
   const [loadingHint, setLoadingHint] = useState(false);
+  const { ttsService } = useSettings(); // 从 SettingsContext 获取 TTS 配置
+
 
   const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
@@ -39,7 +34,6 @@ function Practice() {
           const response = await axios.get(`${apiUrl}/api/get-question`);
           if (response.data) {
               setCurrentQuestion(response.data);
-              setIsAnsweringAllowed(true);
           } else {
               console.error('No question received');
           }
@@ -48,7 +42,7 @@ function Practice() {
       }
       setIsEvaluationGenerated(false); // 重置生成评价状态
       setAnswer(''); // 清空答案
-      setAudioUrl(''); // 清空录音 URL
+      // setAudioUrl(''); // 清空录音 URL
       setEvaluation(''); // 清空评价
       setIsQuestionGenerated(true);
       setResetKey(prev => prev + 1); // 更新重置键
@@ -83,20 +77,21 @@ const handleHintRequest = async () => {
   }
 };
 
+//处理提交的答案
   const handleAnswerSubmit = (submittedAnswer) => {
     setAnswer(submittedAnswer);
-    // 其他处理逻辑（如果有的话）
 };
 
+//处理生成的评价
   const handleEvaluationGenerated = (generatedEvaluation) => {
     setEvaluation(generatedEvaluation);
     setIsEvaluationGenerated(true); // 设置生成评价后的状态
     setQuestionCount(questionCount + 1); // 递增答题计数器
   };
 
-  const handleReset = () => {
-    fetchAndPlayQuestion(); // 使用新的问题获取函数
-};
+//   const handleReset = () => {
+//     fetchAndPlayQuestion(); // 使用新的问题获取函数
+// };
 
 const endPractice = () => {
   setShowEndModal(true);
@@ -106,6 +101,7 @@ const endPractice = () => {
     <Container container-lg className="col-md-8 py-4">
         <div md={12} className="text-center my-4">
           <h1>练习模式</h1>
+          <p>🚧页面样式优化中</p>
         </div>
         <div className="justify-content-center mb-3">
           <div md={6} className="text-center">
@@ -140,7 +136,7 @@ const endPractice = () => {
                                 <Spinner animation="border" role="status" className="my-2">
                                     <span className="sr-only">生成提示中...</span>
                                 </Spinner>
-                                <p>正在生成提示，请稍候...</p>
+                                <p> 让我仔细先想一想...请稍后...马上会给你一个很棒的提示...你也可以先想想怎么回答哦...</p>
                             </div>
                             : 
                             <Collapse in={open}>
@@ -155,7 +151,10 @@ const endPractice = () => {
             <Col md={12} className="mb-3">
               {/* <Card>
                 <Card.Body> */}
-                  <AnswerSection onAnswerSubmit={handleAnswerSubmit} key={resetKey} setAudioUrl={setAudioUrl} disabled={isEvaluationGenerated} />
+                   <AnswerSection 
+                    onAnswerSubmit={handleAnswerSubmit} 
+                    key={resetKey} // 使用 key 来重置组件状态
+                    disabled={isEvaluationGenerated}/> 
                 {/* </Card.Body>
               </Card> */}
             </Col>
@@ -163,10 +162,10 @@ const endPractice = () => {
           <Row>
             <Col md={12}>
               <GenerateSection 
-                question={currentQuestion.question} 
+                currentQuestion={currentQuestion}
                 answer={answer} 
                 onEvaluationGenerated={handleEvaluationGenerated} 
-                evaluationService={evaluationService} 
+                aiChoice={aiChoice} 
                 disabled={!answer || isEvaluationGenerated}
               />
             </Col>

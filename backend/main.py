@@ -39,7 +39,7 @@ class Item(BaseModel):
     prompt: str | None = ''
     question: str | None = ''  # 添加 question 字段
     user_response: str | None = ''  # 新增字段
-    ai: str | None = 'zhipuai'  # 添加 ai 字段
+    ai: str | None = ''  # 添加 ai 字段 zhipuai
     
 class TextToSpeechRequest(BaseModel):
     text: str
@@ -106,12 +106,13 @@ async def get_history(request: Request, db: Session = Depends(get_db)):
 @app.post('/api/generate')
 async def generate(item: Item):
     # 设置 generate 的 user_prompt
+
     user_prompt = f"你是培训中学生练习中考自招考试面试环节的教练。你正在辅导学生模拟面试。学生抽到的问题是:{item.question},学生的回答是:{item.user_response}，请对学生进行评价并指导怎样改进。回复内容包括四部分:1.评分(满分10分制)、2.评价学生的回答、3.教学生怎样更好回答这个问题 4.给学生一份参考回答。5. 随机告诉学生一条中考升学面试小技巧。 语言表达友善公正。"
 
     if item.ai == 'zhipuai':
         stream = call_zhipuai(item.question, user_prompt)
     elif item.ai == 'openai':
-        stream = openai_services.call_openai(item.question, user_prompt)
+        stream = openai_services.call_openai(user_prompt)
     else:
         raise HTTPException(status_code=400, detail="Invalid AI option")
 
@@ -133,7 +134,7 @@ async def generate_hint(item: Item):
     if item.ai == 'zhipuai':
         stream = call_zhipuai(item.question, user_prompt)
     elif item.ai == 'openai':
-        stream = openai_services.call_openai(item.question, user_prompt)
+        stream = openai_services.call_openai(user_prompt)
     else:
         raise HTTPException(status_code=400, detail="Invalid AI option")
 

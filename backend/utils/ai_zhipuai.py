@@ -6,7 +6,7 @@ import os
 zhipuai.api_key = os.environ.get('API_KEY')
 
 
-def call_zhipuai(question,user_prompt):
+def call_zhipuai(user_prompt):
     def stream():
         response = zhipuai.model_api.sse_invoke(
             model="chatglm_pro",
