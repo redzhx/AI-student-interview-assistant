@@ -45,7 +45,7 @@ function Home() {
       </Row>
       <Row className="justify-content-md-center my-5"  >
       <Col  md="8">            
-        <Alert variant='primary'>🚧此应用处于测试阶段,如果看不到出题与记录页面，那一定是后端在睡觉，请原谅它，毕竟是免费的。 刷新页面等一会儿，它很快就醒来工作了。</Alert>
+        <Alert variant='primary'>🚧此页面为测试专用,如果不能出题、看不到练习记录，那是不收费的后端睡觉了。请原谅它，刷新页面，等一会儿，它很快就醒来工作了。</Alert>
         </Col>
       </Row>
     </Container>

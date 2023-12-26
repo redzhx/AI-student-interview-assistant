@@ -102,7 +102,7 @@ function History() {
                 </Card.Body>
                 <Card.Footer>
                   <small className="text-muted">
-                  <Button variant="outline-dark" size="sm" onClick={() => {
+                  <Button variant="outline-secondary" size="sm" onClick={() => {
                     setRecordToDelete(record);
                     setShowConfirmModal(true);
                   }}>删除</Button>
