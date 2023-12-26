@@ -59,9 +59,7 @@ function GenerateSection({ question, answer, onEvaluationGenerated, evaluationSe
         <div>
         <Button className="my-1"
             onClick={generateEvaluation} 
-            // disabled={isLoading || !answer || disabled} // 添加了 disabled 条件
             disabled={!answer || isLoading|| disabled} // 确保在没有答案时禁用按钮
-
             title={!answer ? "请先完成答案的输入" : ""}
             >
             {isLoading ? '生成中...' : '生成评价'}
