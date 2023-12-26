@@ -60,6 +60,8 @@ function Practice() {
 
 // 定义处理获取提示的函数
 const handleHintRequest = async () => {
+  if (!loadingHint && !hint) {
+
   setLoadingHint(true);
 
       try {
@@ -69,11 +71,15 @@ const handleHintRequest = async () => {
           });
 
           setHint(response.data); // 假设响应数据就是您想要显示的提示
-          setOpen(true);  // 展开面板
       } catch (error) {
           console.error('Error fetching hint:', error);
         } finally {
           setLoadingHint(false);
+          setOpen(true); // 加载完成后自动展开提示区域
+        } 
+      } else {
+          // 如果已有提示内容，则切换提示区域的折叠状态
+          setOpen(!open);
   }
 };
 
@@ -117,43 +123,34 @@ const endPractice = () => {
       {currentQuestion.question && (
         <>
           <Row className='my-3'>
-            <Col md={12} className=" mb-3 ">
-              {/* <Card>
-                <Card.Body className=' '> */}
-                  <h5 className="bold "><QuestionDisplay question={currentQuestion.question} ttsService={ttsService} /></h5>
-                {/* </Card.Body>
-              </Card>*/}
-               <Button variant="outline-primary" className="my-2" size="sm" 
-                    onClick={handleHintRequest}
-                    disabled={loadingHint}
-                >
-                    {open ? '💡换个提示' : '💡给点提示'}
-                </Button>
-            </Col> 
-          </Row>
-          <Row>
-            <Col md={12}>
-            <Card onClick={() => setOpen(!open)}>
-            <Card.Header>
-                <span>💡提示</span>
-              </Card.Header>
-                <Collapse in={open}>
-                  <div className="collapse-content">
-                      <Card.Body style={{   whiteSpace: 'pre-line',textAlign: 'left' }}>
-                      {loadingHint ? 
-                      <div className="text-center">
-                        <Spinner animation="border" role="status">
-                            <span className="sr-only">加载中...</span>
-                        </Spinner>
-                    </div>
-                    : ` ${hint}`
-                  }
-                    </Card.Body>
-                  </div>
-                </Collapse>
-               </Card>
-            </Col>
-          </Row>
+                    <Col md={12} className="mb-3">
+                        <h5 className="bold"><QuestionDisplay question={currentQuestion.question} ttsService={ttsService} /></h5>
+                        <Button variant="outline-primary" className="my-2" size="sm" 
+                            onClick={handleHintRequest}
+                            disabled={loadingHint}
+                        >
+                            {loadingHint ? '生成中...' : (open ? '收起提示' : '给点提示')}
+                        </Button>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col md={12}>
+                        {loadingHint ? 
+                            <div className="text-center">
+                                <Spinner animation="border" role="status" className="my-2">
+                                    <span className="sr-only">生成提示中...</span>
+                                </Spinner>
+                                <p>正在生成提示，请稍候...</p>
+                            </div>
+                            : 
+                            <Collapse in={open}>
+                                <Card.Body style={{whiteSpace: 'pre-line', textAlign: 'left'}}>
+                                    {`💡提示: ${hint}`}
+                                </Card.Body>
+                            </Collapse>
+                        }
+                    </Col>
+                </Row>
           <Row>
             <Col md={12} className="mb-3">
               {/* <Card>
