@@ -44,9 +44,9 @@ function Home() {
         
       </Row>
       <Row className="justify-content-md-center my-5"  >
-      <Col  md="8">            
+      {/* <Col  md="8">            
         <Alert variant='primary'>🚧此页面为测试专用,如果不能出题、看不到练习记录，那是免费的后端正在睡觉。请原谅它，刷新页面，等一分钟，它会醒来工作的。</Alert>
-        </Col>
+        </Col> */}
       </Row>
     </Container>
     <div className='my-10'><Feature/></div>

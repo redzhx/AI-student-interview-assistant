@@ -136,7 +136,7 @@ const endPractice = () => {
                                 <Spinner animation="border" role="status" className="my-2">
                                     <span className="sr-only">生成提示中...</span>
                                 </Spinner>
-                                <p> 让我仔细先想一想...请稍后...马上会给你一个很棒的提示...你也可以先想想怎么回答哦...</p>
+                                <p> 请稍等...提示马上来到...你也可以先想想怎么回答哦...</p>
                             </div>
                             : 
                             <Collapse in={open}>
