@@ -12,7 +12,7 @@ function GenerateSection({ question, answer, onEvaluationGenerated, evaluationSe
 
     const saveRecord = async (questionText, answerText, evaluationText) => {
         try {
-            await axios.post(`${apiUrl}//api/create`, { 
+            await axios.post(`${apiUrl}/api/create`, { 
                 question: questionText, 
                 answer: answerText, 
                 content: evaluationText 
@@ -33,7 +33,7 @@ function GenerateSection({ question, answer, onEvaluationGenerated, evaluationSe
         setIsLoading(true);
 
         try {
-            const response = await axios.post(`${apiUrl}//api/generate`, {
+            const response = await axios.post(`${apiUrl}/api/generate`, {
                 prompt: answer, // 使用传入的答案
                 ai: aiChoice
             });
