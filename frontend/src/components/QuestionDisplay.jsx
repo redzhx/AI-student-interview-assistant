@@ -1,35 +1,17 @@
 // frontend/src/components/QuestionDisplay.jsx
-import React, { useEffect,useRef } from 'react';
+import React, { useEffect,useRef,useCallback } from 'react';
 import axios from 'axios';
 import { useSettings } from './SettingsContext'; 
 
-
-function QuestionDisplay({ question, ttsService,  }) {
+function QuestionDisplay({ question}) {
     const audioRef = useRef(null);
-    const { isMuted } = useSettings(); // 获取静音模式状态 stopAudio 上面括号里去掉了
+    const { isMuted, ttsService } = useSettings();
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
-    useEffect(() => {
-        if (question && !isMuted) {
-            playAudio(question);
-        }
-
-        // 清理函数，在组件卸载时停止音频播放
-        return () => {       
-        // 停止通过 HTMLAudioElement 播放的音频
-            if (audioRef.current) {
-                audioRef.current.pause();
-            }
-        // 停止通过 SpeechSynthesis 播放的音频
-            speechSynthesis.cancel();
-        };
-    }, [question, isMuted]); // 添加 isMuted 作为依赖
-
-    const playAudio = (text) => {
+    const playAudio = useCallback((text) => {
         if (isMuted) return; // 静音模式，不执行任何操作
 
         switch (ttsService) {
-            
             case 'browser':
                 const utterance = new SpeechSynthesisUtterance(text);
                 speechSynthesis.speak(utterance);
@@ -44,18 +26,34 @@ function QuestionDisplay({ question, ttsService,  }) {
                     .then(response => playAudioBlob(response.data))
                     .catch(error => console.error('Error with OpenAI TTS:', error));
                 break;
-            
             default:
                 console.error('Unknown TTS service:', ttsService);
-
         }
-    };
+    }, [apiUrl,isMuted, ttsService]);
 
     const playAudioBlob = (blob) => {
         const audioUrl = URL.createObjectURL(blob);
         const audio = new Audio(audioUrl);
         audio.play();
     };
+
+
+    useEffect(() => {
+        if (question) {
+            playAudio(question);
+        }
+
+        // 复制 audioRef.current 到一个局部变量
+        const currentAudioRef = audioRef.current;
+
+        return () => {
+            if (currentAudioRef) {
+                currentAudioRef.pause();
+            }
+            speechSynthesis.cancel();
+        };
+    }, [question, playAudio]);
+
 
     return (
         <div>

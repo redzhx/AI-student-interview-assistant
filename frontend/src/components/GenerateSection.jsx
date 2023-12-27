@@ -7,10 +7,10 @@ import { Button } from 'react-bootstrap';
 
 function GenerateSection({ currentQuestion, answer, onEvaluationGenerated, disabled }) {
     const { aiChoice } = useSettings();
-    const [evaluation, setEvaluation] = useState('');
+    // const [evaluation, setEvaluation] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
-    const questionText = currentQuestion.question; // 从 currentQuestion 对象中提取问题文本
+    const questionText = currentQuestion.question; // From currentQuestion object, extract question text
 
 
     const saveRecord = async (questionText, answerText, evaluationText) => {
@@ -20,15 +20,14 @@ function GenerateSection({ currentQuestion, answer, onEvaluationGenerated, disab
                 answer: answerText, 
                 content: evaluationText 
             });
-            // 可以在这里添加提示保存成功的逻辑
+            // Add logic for successful save
         } catch (error) {
             console.error('Error saving record:', error);
-            // 可以在这里添加提示保存失败的逻辑
+            // Add logic for failed save
         }
     };
 
     const generateEvaluation = async () => {
-
          if (!answer) {
             alert("请先完成答案的输入");
             return;
@@ -37,16 +36,17 @@ function GenerateSection({ currentQuestion, answer, onEvaluationGenerated, disab
 
         try {
             const response = await axios.post(`${apiUrl}/api/generate`, {
-                question: currentQuestion.question,  // 当前问题
-                user_response: answer, // 使用传入的答案
+                question: currentQuestion.question,  
+                user_response: answer, 
                 ai: aiChoice
             });
-            setEvaluation(response.data);
+            // setEvaluation(response.data);
             if (onEvaluationGenerated) {
                 onEvaluationGenerated(response.data); // 通知父组件生成的评价
             }
-            // 保存答题记录
-            saveRecord(currentQuestion.question, answer, response.data); 
+            // saveRecord(currentQuestion.question, answer, response.data); 
+            saveRecord(questionText, answer, response.data);
+
             setIsLoading(false);
         } catch (error) {
             console.error('Error generating evaluation:', error);}

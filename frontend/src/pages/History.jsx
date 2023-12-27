@@ -13,7 +13,6 @@ function History() {
 
   useEffect(() => {
     const fetchRecords = async () => {
-      // 获取历史记录数据的逻辑
       try {
         const response = await axios.get(`${apiUrl}/api/history`);
         if (Array.isArray(response.data)) {
@@ -25,9 +24,10 @@ function History() {
         console.error('Error fetching history:', error);
       }
     };
+  
 
     fetchRecords();
-  }, []);
+  }, [apiUrl]);
 
   const handleToggleCollapse = index => {
     setOpenCollapse(prevState => ({...prevState, [index]: !prevState[index]}));

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Button, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Button,  } from 'react-bootstrap';
 import Footer from '../components/Footer.jsx';
 import Feature from '../components/Feature.jsx';
 

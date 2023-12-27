@@ -7,8 +7,10 @@ import GenerateSection from '../components/GenerateSection';
 import { useSettings } from '../components/SettingsContext';
 import { Container,Row,Button, Card,Col,Collapse, Spinner } from 'react-bootstrap'; // 确保这一行存在于文件顶部
 import PracticeEndModal from '../components/PracticeEndModal';
-// import 'bootstrap/dist/css/bootstrap.min.css';
-// import '../App.css';
+import ControlPanel from '../components/ControlPanel'; // 确保正确导入 ControlPanel 组件
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../App.css';
 
 function Practice() {
   const [currentQuestion, setCurrentQuestion] = useState({});
@@ -24,6 +26,7 @@ function Practice() {
   const [open, setOpen] = useState(false);  // 控制折叠面板的开关
   const [loadingHint, setLoadingHint] = useState(false);
   const { ttsService } = useSettings(); // 从 SettingsContext 获取 TTS 配置
+  const [showControlPanel, setShowControlPanel] = useState(false);
 
 
   const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
@@ -100,7 +103,14 @@ const endPractice = () => {
   return (
     <Container container-lg className="col-md-8 py-4">
         <div md={12} className="text-center my-4">
-          <h1>练习模式</h1>
+          <h1>练习模式
+          <Button
+          id="contolbtn" 
+          className="ml-3  shaking-btn outline-primary"
+          onClick={() => setShowControlPanel(true)}
+        >
+        <i class="fa-solid fa-robot"></i>      
+      </Button></h1>
           <p>🚧页面样式优化中</p>
         </div>
         <div className="justify-content-center mb-3">
@@ -195,6 +205,10 @@ const endPractice = () => {
         onHide={() => setShowEndModal(false)} 
         questionCount={questionCount}
       />
+      
+      
+      <ControlPanel show={showControlPanel} onHide={() => setShowControlPanel(false)} />
+  
     </Container>
 
   );
