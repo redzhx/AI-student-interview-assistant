@@ -30,7 +30,7 @@ function ControlPanel({ show, onHide }) {
               {isMuted ? "" : ""}
             </Button>
            <Form.Group>
-              <Form.Label>文本转语音服务</Form.Label>
+              <Form.Label>文本转语音接口</Form.Label>
               <Form.Control 
                 as="select" 
                 value={ttsService}
@@ -43,7 +43,7 @@ function ControlPanel({ show, onHide }) {
               </Form.Control>
             </Form.Group>
             <Form.Group>
-              <Form.Label>语音播放服务</Form.Label>
+              <Form.Label>语音转文本接口</Form.Label>
               <Form.Control 
                 as="select" 
                 value={sttService}
@@ -53,7 +53,7 @@ function ControlPanel({ show, onHide }) {
               </Form.Control>
             </Form.Group>
             <Form.Group>
-              <Form.Label>生成评价服务</Form.Label>
+              <Form.Label>生成评价接口</Form.Label>
               <Form.Control 
                 as="select" 
                 value={aiChoice}

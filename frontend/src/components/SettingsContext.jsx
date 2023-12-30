@@ -6,7 +6,7 @@ const SettingsContext = createContext();
 export const useSettings = () => useContext(SettingsContext);
 
 export const SettingsProvider = ({ children }) => {
-  const [ttsService, setTtsService] = useState('minimax');
+  const [ttsService, setTtsService] = useState('browser');
   const [sttService, setSttService] = useState('openai');
   const [aiChoice, setAiChoice] = useState('zhipuai');
   const [isMuted, setIsMuted] = useState(false); // 添加静音模式的状态

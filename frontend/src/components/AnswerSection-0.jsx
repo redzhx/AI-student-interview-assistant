@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect,useCallback } from 'react';
 import TextInput from './TextInput';
 import axios from 'axios';
-import { Button,Spinner } from 'react-bootstrap';
+import { Button,Spinner,Card,Row,Col} from 'react-bootstrap';
 import '../App.css';
 
 function AnswerSection({ onAnswerSubmit,disabled}) {
@@ -24,6 +24,8 @@ function AnswerSection({ onAnswerSubmit,disabled}) {
         setAudioUrl(null);
         setTranscript('');
         setError(null);
+        setCountdown(20); // 重置倒计时
+
     };
 
     useEffect(() => {
@@ -60,10 +62,14 @@ function AnswerSection({ onAnswerSubmit,disabled}) {
 
             mediaRecorderRef.current.start();
             setIsRecording(true);
+            setIsRecordingMode(true);
+
             setCountdown(20); // 重置倒计时
             countdownTimerRef.current = setInterval(() => {
                 setCountdown(prevCountdown => prevCountdown - 1);
             }, 1000);
+
+        
         } catch (error) {
             setError('Error accessing media devices');
         }
@@ -107,39 +113,59 @@ function AnswerSection({ onAnswerSubmit,disabled}) {
 
 
     return (
-        <div id="answerarea" className="container mt-4">
-            {isRecordingMode ? (
-                <div>
-                    <div className="my-3">
-                        <strong className="text-primary">
-                            <i className="fa-solid fa-hourglass-start"></i> 语音限时 : {countdown} 秒
-                        </strong>
-                    </div>
-                    <div>
-                        {transcript && <p>💁‍♂️: {transcript}</p>}
-                        {error && <p>Error: {error}</p>}
-                        {loading && <Spinner animation="border" variant="primary" role="status">
-                            <span className="sr-only">Loading...</span>
-                        </Spinner>}<br/>
-                        {audioUrl && <audio src={audioUrl} controls />}
-                    </div>
-                    <Button 
-                        className="btn-danger my-1" 
-                        onClick={isRecording ? stopRecording : startRecording}
-                        disabled={isRecording && countdown === 0}
-                    >
-                        <i className={`fa-${isRecording ? 'regular fa-circle-stop' : 'solid fa-microphone'} fa-lg`}></i>
-                    </Button>
-                </div>
-            ) : (
-                <TextInput onTextSubmit={onAnswerSubmit} />
-            )}
-            <Button variant="primary" onClick={toggleAnswerMode} disabled={disabled}>
-                <i className={isRecordingMode ? "fa-solid fa-keyboard" : "fa-solid fa-xmark"}></i>
+        <div >
+           {isRecordingMode&&(<Card className="my-1">
+            {/* <Card.Header className="mb-2">回答</Card.Header> */}
+            <Card.Body id="answerarea" >
+               
+                <Card.Text style={{ whiteSpace: 'pre-line', textAlign: '' }}>
+                <strong className="text-dark">录音限时: {countdown} 秒</strong><br/>
+                    {loading && (
+                    <Spinner animation="border" variant="primary" role="status">
+                    <span className="sr-only">Loading...</span>
+                    </Spinner>
+                )}
+                {transcript && <p>{transcript}</p>}
+                {error && <p>Error: {error}</p>}
+                <br/>
+                {audioUrl && <audio src={audioUrl} controls />}
+                </Card.Text>
+            </Card.Body>
+        </Card>)}
+            {/* {!isRecordingMode && (<TextInput onTextSubmit={onAnswerSubmit} disabled={isRecording} />)}
+            <Card id="answerarea">
+            <Card.Body className="text-center">
+            <Button variant="outline-primary" onClick={toggleAnswerMode} disabled={disabled}>
+                <i className={isRecordingMode ? 'fa-solid fa-keyboard' : 'fa-solid fa-xmark'}></i>
                 {isRecordingMode ? ' ' : ' '}
             </Button>
+            <Button
+            className="btn-danger my-1"
+            onClick={isRecording ? stopRecording : startRecording}
+            disabled={isRecording && countdown === 0}
+            >
+            <i className={`fa-${isRecording ? 'regular fa-circle-stop' : 'solid fa-microphone'} fa-lg`}></i>
+            </Button>
+            
+            </Card.Body>
+          </Card> */}
+        <Row>
+            <Col>
+            {!isRecordingMode && (<TextInput onTextSubmit={onAnswerSubmit} disabled={isRecording} />)}
+            <Button variant="outline-primary" onClick={toggleAnswerMode} disabled={disabled}>
+                <i className={isRecordingMode ? 'fa-solid fa-keyboard' : 'fa-solid fa-xmark'}></i>
+                {isRecordingMode ? ' ' : ' '}
+            </Button>
+            <Button
+            className="btn-danger my-1"
+            onClick={isRecording ? stopRecording : startRecording}
+            disabled={isRecording && countdown === 0}
+            >
+            <i className={`fa-${isRecording ? 'regular fa-circle-stop' : 'solid fa-microphone'} fa-lg`}></i>
+            </Button>
+            </Col>
+        </Row>
         </div>
-       
-    );
+      );
 }
 export default AnswerSection;

@@ -1,122 +1,109 @@
 // AnswerSection-0.jsx
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect,useCallback } from 'react';
 import TextInput from './TextInput';
 import axios from 'axios';
-import { Button, Spinner } from 'react-bootstrap';
+import { Button,Spinner } from 'react-bootstrap';
 import '../App.css';
 
-function AnswerSection({ onAnswerSubmit,disabled,onTranscriptReady }) {
+function AnswerSection({ onAnswerSubmit,disabled}) {
 
-  const [isRecording, setIsRecording] = useState(false);
-  const [audioUrl, setAudioUrl] = useState(null); // 定义 audioUrl 状态
-  const [transcript, setTranscript] = useState(''); // 定义 transcript 状态
+    const [isRecording, setIsRecording] = useState(false);
+    const [audioUrl, setAudioUrl] = useState(null); // 定义 audioUrl 状态
+    const [transcript, setTranscript] = useState(''); // 定义 transcript 状态
+    const [countdown, setCountdown] = useState(20);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [isRecordingMode, setIsRecordingMode] = useState(true); // 默认为录音模式
+    const countdownTimerRef = useRef(null);
+    const mediaRecorderRef = useRef(null);
+    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
-  const [countdown, setCountdown] = useState(20);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [isRecordingMode, setIsRecordingMode] = useState(true); // 默认为录音模式
-  const countdownTimerRef = useRef(null);
-  const mediaRecorderRef = useRef(null);
-  const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
-
-//     const handleAudioTranscriptReady = (transcript, audioUrl) => {
-//     //   setIsRecording(false); // 停止录音
-//       setTranscript(transcript); // 设置转写文本
-//       setAudioUrl(audioUrl); // 设置录音文件的 URL
-//       onAnswerSubmit(transcript); // 提交答案进行评价
-//   };
-
-    // const toggleAnswerMode = () => {
-    //     setIsRecording(!isRecording);
-    // };
 
     const toggleAnswerMode = () => {
-      setIsRecordingMode(!isRecordingMode);
-      // 清除文本或语音的状态
-      setAudioUrl(null);
-      setTranscript('');
-      setError(null);
-  };
+        setIsRecordingMode(!isRecordingMode);
+        setAudioUrl(null);
+        setTranscript('');
+        setError(null);
+    };
 
     useEffect(() => {
-      if (countdown === 0 && isRecording) {
-          stopRecording();
-      }
-  }, [countdown, isRecording,]);
+        return () => {
+            clearInterval(countdownTimerRef.current);
+        };
+    }, []);
 
-  useEffect(() => {
-      return () => {
-          clearInterval(countdownTimerRef.current);
-      };
-  }, []);
+    const startRecording = async () => {
+        // 清除旧的录音文件和转写文本
+        setAudioUrl(null);
+        setTranscript('');
+        setError(null);
 
-  const startRecording = async () => {
-      // 清除旧的录音文件和转写文本
-      setAudioUrl(null);
-      setTranscript('');
-      setError(null);
+        try {
+        
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorderRef.current = new MediaRecorder(stream);
+            const audioChunks = [];
 
-      try {
-      
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          mediaRecorderRef.current = new MediaRecorder(stream);
-          const audioChunks = [];
+            mediaRecorderRef.current.ondataavailable = event => {
+                audioChunks.push(event.data);
+            };
 
-          mediaRecorderRef.current.ondataavailable = event => {
-              audioChunks.push(event.data);
-          };
+            mediaRecorderRef.current.onstop = async () => {
+                if (!audioChunks.length) {
+                    setError('No audio data available.');
+                    return;
+                }
+                const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
+                setAudioUrl(URL.createObjectURL(audioBlob));
+                uploadAudio(audioBlob);
+            };
 
-          mediaRecorderRef.current.onstop = async () => {
-              if (!audioChunks.length) {
-                  setError('No audio data available.');
-                  return;
-              }
-              const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
-              setAudioUrl(URL.createObjectURL(audioBlob));
-              uploadAudio(audioBlob);
-          };
+            mediaRecorderRef.current.start();
+            setIsRecording(true);
+            setCountdown(20); // 重置倒计时
+            countdownTimerRef.current = setInterval(() => {
+                setCountdown(prevCountdown => prevCountdown - 1);
+            }, 1000);
+        } catch (error) {
+            setError('Error accessing media devices');
+        }
+    };
 
-          mediaRecorderRef.current.start();
-          setIsRecording(true);
-          setCountdown(20); // 重置倒计时
-          countdownTimerRef.current = setInterval(() => {
-              setCountdown(prevCountdown => prevCountdown - 1);
-          }, 1000);
-      } catch (error) {
-          setError('Error accessing media devices');
-      }
-  };
+    const stopRecording = useCallback(() => {
+        if (mediaRecorderRef.current && isRecording) {
+            mediaRecorderRef.current.stop();
+            setIsRecording(false);
+            clearInterval(countdownTimerRef.current);
+        }
+    }, [mediaRecorderRef, isRecording, setIsRecording, countdownTimerRef]);
 
-  const stopRecording = () => {
-      if (mediaRecorderRef.current && isRecording) {
-          mediaRecorderRef.current.stop();
-          setIsRecording(false);
-          clearInterval(countdownTimerRef.current);
-      }
-  };
+    const uploadAudio = async (audioBlob) => {
+        setLoading(true); // 开始上传时显示 Spinner
+        const formData = new FormData();
+        formData.append("audioFile", audioBlob, "audio.mp3");
 
-  const uploadAudio = async (audioBlob) => {
-      setLoading(true); // 开始上传时显示 Spinner
-      const formData = new FormData();
-      formData.append("audioFile", audioBlob, "audio.mp3");
+        try {
+            const response = await axios.post(`${apiUrl}/api/upload-audio`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            setTranscript(response.data.transcript);
+            // onTranscriptReady(response.data.transcript);
+            onAnswerSubmit(response.data.transcript); // 更新答案状态
 
-      try {
-          const response = await axios.post(`${apiUrl}/api/upload-audio`, formData, {
-              headers: {
-                  'Content-Type': 'multipart/form-data',
-              },
-          });
-          setTranscript(response.data.transcript);
-          // onTranscriptReady(response.data.transcript);
-          onAnswerSubmit(response.data.transcript); // 更新答案状态
+        } catch (error) {
+            console.error('Error uploading audio:', error);
+        }
+        setLoading(false); // 上传结束或发生错误时隐藏 Spinner
 
-      } catch (error) {
-          console.error('Error uploading audio:', error);
-      }
-      setLoading(false); // 上传结束或发生错误时隐藏 Spinner
+    };
 
-  };
-
+    useEffect(() => {
+        if (countdown === 0 && isRecording) {
+            stopRecording();
+        }
+    }, [countdown, isRecording, stopRecording]);
 
 
     return (
@@ -152,6 +139,7 @@ function AnswerSection({ onAnswerSubmit,disabled,onTranscriptReady }) {
                 {isRecordingMode ? ' ' : ' '}
             </Button>
         </div>
+       
     );
 }
 export default AnswerSection;

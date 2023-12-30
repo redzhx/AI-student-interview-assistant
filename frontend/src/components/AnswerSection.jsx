@@ -138,7 +138,7 @@ function AnswerSection({ onAnswerSubmit, disabled }) {
                 <div>
                     
                      <div className="my-3">
-                        <strong className="text-primary">语音限时 : {countdown} 秒</strong>
+                        <strong className="">语音限时 : {countdown} 秒</strong>
                     </div>
                     <div>
                     {transcript && <p>{transcript}</p>}
@@ -167,6 +167,7 @@ function AnswerSection({ onAnswerSubmit, disabled }) {
                 <i className={isRecordingMode ? "fa-solid fa-keyboard" : "fa-solid fa-microphone"}></i>
                 {isRecordingMode ? ' 键盘' : '  返回'}
             </Button>
+            
         </div>
        
     );

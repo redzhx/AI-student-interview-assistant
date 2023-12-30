@@ -6,15 +6,12 @@ import History from './pages/History';
 import Home from './pages/Home';
 import Practice from './pages/Practice';
 import Interview from './pages/Interview';
-// import './custom.css'; // 导入 Bootstrap 样式
-import './App.css';
+import './custom.css'; // 导入 Bootstrap 样式
 
+import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css'; // 导入 Bootstrap 样式
 
-
-
 function App() {
-  // const [ttsService, setTtsService] = useState('browser'); // 默认TTS服务
 
   return (
     <SettingsProvider>
@@ -25,7 +22,6 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/practice" element={<Practice  />} /> 
-            {/* ttsService={ttsService} */}
             <Route path="/interview" element={<Interview  />} />
             <Route path="/history" element={<History />} />
           </Routes>

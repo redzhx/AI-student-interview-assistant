@@ -35,17 +35,14 @@
   to {
     transform: rotate(360deg);
   }
-}
+} 
 
-body {
-  margin: 0;
-  font-family: "Nunito Sans", sans-serif;
-  font-size: 1rem;
-  font-weight: 300;
-  line-height: 1.5;
-  color: #4A5073;
-  text-align: left;
-  background-color: #fafcff;
+#answerarea{
+  background-color: #f8f9fa
+}
+#hint{
+  background-color: #f1f9f7
+
 }
 
 button {
@@ -111,10 +108,7 @@ button {
 }
 /* end of control panel */
 
-#answerarea{
-  min-height: 180px;
 
-}
 
 .card-header-flex {
   cursor: pointer;
@@ -129,28 +123,24 @@ button {
 
 .card-header-flex .arrow-icon {
   margin: 0 5px;
-  /* 根据需要添加更多样式，比如右侧的边距 */
 }
 
 .collapse-content {
-  margin-bottom: 15px; 
+  margin-bottom: 10px; 
 }
 
 
 .floating-btn {
-  /* display: flex; */
-  /* position: fixed; */
-  /* border-radius: 50%; */
+
   height: 40px;
   width: 40px;
-  /* right: 0px; */
-  /* top: 100px; */
+
   padding: 10px;
   border: none;
   cursor: pointer;
   z-index: 1000; /* 确保按钮在页面上其他元素之上 */
 }
-#contolbtn, #mutebtn{
+#controlbtn, #mutebtn,#round-btn{
   border-radius: 50%;
   height: 30px;
   width: 30px;
@@ -162,6 +152,9 @@ button {
   cursor: pointer;
 
 }
+
+
+
 /* animation */
 @keyframes bounce {
   0%, 20%, 50%, 80%, 100% {

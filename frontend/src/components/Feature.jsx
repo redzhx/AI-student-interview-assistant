@@ -4,15 +4,14 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // 导入 Bootstrap 样式
 
 const FeatureSection = () => {
   return (
-    <div className="py-md-5">
-     
+    <div className="py-md-5 bg-secondary">
       <div className="container mt-5">
         <div className="row mt-5">
           <div className=" text-center col-12 col-md-6 col-lg-4 mb-4 mb-lg-0">
             <div className="card border-1 bg-white text-center p-1">
               <div className="card-header text-center bg-white border-0 pb-0">
                 <div className="icon text-lg text-primary mb-4">
-                <i class="fa-regular fa-paper-plane fa-3x"></i>
+                <i class="fa-regular fa-paper-plane fa-2x"></i>
                 </div>
                 <h2 className="h3 text-dark m-0">随时练习</h2>
               </div>
@@ -24,8 +23,8 @@ const FeatureSection = () => {
           <div className="col-12 col-md-6 col-lg-4 mb-4 mb-lg-0">
             <div className="card border-1 bg-white text-center p-1">
             <div className="card-header text-center bg-white border-0 pb-0">
-            <div className="icon text-lg text-primary mb-4">
-            <i class="fa-regular fa-thumbs-up fa-3x"></i>
+            <div className="icon text-lg text-info mb-4">
+            <i class="fa-regular fa-thumbs-up fa-2x"></i>
                 </div>
                 <h2 className="h3 text-dark m-0">真题模拟</h2>
               </div>
@@ -37,10 +36,10 @@ const FeatureSection = () => {
           <div className="col-12 col-md-6 col-lg-4">
             <div className="card border-1 bg-white text-center p-1">
             <div className="card-header text-center bg-white border-0 pb-0">
-            <div className="icon text-lg text-primary mb-4">
-                <i class="fa-solid fa-robot fa-3x"></i>
+            <div className="icon text-lg text-warning mb-4">
+                <i class="fa-solid fa-robot fa-2x"></i>
                 </div>
-                <h2 className="h4 text-dark m-0">智能反馈</h2>
+                <h2 className="h3 text-dark m-0">智能反馈</h2>
               </div>
               <div className="card-body">
                 <p>个性化智能评价，拒绝千篇一律。</p>

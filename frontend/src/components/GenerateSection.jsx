@@ -3,11 +3,11 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useSettings } from './SettingsContext';
 
-import { Button } from 'react-bootstrap';
+import { Button,Col,Card } from 'react-bootstrap';
 
 function GenerateSection({ currentQuestion, answer, onEvaluationGenerated, disabled }) {
     const { aiChoice } = useSettings();
-    // const [evaluation, setEvaluation] = useState('');
+    const [evaluation, setEvaluation] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
     const questionText = currentQuestion.question; // From currentQuestion object, extract question text
@@ -26,49 +26,80 @@ function GenerateSection({ currentQuestion, answer, onEvaluationGenerated, disab
             // Add logic for failed save
         }
     };
-
     const generateEvaluation = async () => {
-         if (!answer) {
+        if (!answer) {
             alert("请先完成答案的输入");
             return;
         }
         setIsLoading(true);
-
+        // setEvaluation(''); // 清空先前的评价
+    
         try {
-            const response = await axios.post(`${apiUrl}/api/generate`, {
-                question: currentQuestion.question,  
-                user_response: answer, 
-                ai: aiChoice
+            const response = await fetch(`${apiUrl}/api/generate`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    question: currentQuestion.question,  
+                    user_response: answer, 
+                    ai: aiChoice
+                })
             });
-            // setEvaluation(response.data);
-            if (onEvaluationGenerated) {
-                onEvaluationGenerated(response.data); // 通知父组件生成的评价
-            }
-            // saveRecord(currentQuestion.question, answer, response.data); 
-            saveRecord(questionText, answer, response.data);
-
-            setIsLoading(false);
+    
+            const reader = response.body.getReader();
+            let evaluationStream = '';
+    
+            // 处理流数据
+            reader.read().then(function processStream({ done, value }) {
+                if (done) {
+                    setIsLoading(false);
+                    if (onEvaluationGenerated) {
+                        onEvaluationGenerated(evaluationStream); // 通知父组件生成的评价
+                    }
+                    saveRecord(currentQuestion.question, answer, evaluationStream);
+                    return;
+                }
+    
+                // 将 Uint8Array 转换为字符串
+                const chunk = new TextDecoder("utf-8").decode(value);
+                evaluationStream += chunk;
+                setEvaluation(evaluationStream); // 实时更新评价
+    
+                // 读取下一块数据
+                return reader.read().then(processStream);
+            });
+    
         } catch (error) {
-            console.error('Error generating evaluation:', error);}
-
-       
-        setIsLoading(false);
-        
+            console.error('Error generating evaluation:', error);
+            setIsLoading(false);
+        }
     };
-
-            // if (!answer) return; // 确保有答案再生成评价
-        //  setIsLoading(true);
+    
 
     return (
-        <div>
-        <Button className="my-1"
+        <>
+        
+        <Col md={12} className="mt-3">
+          <Card>
+          <Card.Header className="text-center">
+          <Button className="my-1"
             onClick={generateEvaluation} 
             disabled={!answer || isLoading|| disabled} // 确保在没有答案时禁用按钮
             title={!answer ? "请先完成答案的输入" : ""}
             >
-            {isLoading ? '生成中...' : '生成评价'}
-        </Button>
-      </div>
+            {/* {isLoading ? '生成中...' : '查看评价'} */}
+            生成评价
+        </Button>            </Card.Header>
+            <Card.Body>
+              {/* <Card.Subtitle className="mb-2">你的回答: {answer}</Card.Subtitle> */}
+              <Card.Text style={{   whiteSpace: 'pre-line',textAlign: 'left' }}>
+                {answer} {evaluation}
+              </Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+      </>
     );
 }
 

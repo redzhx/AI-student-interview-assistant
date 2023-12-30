@@ -11,13 +11,13 @@ function TextInput({ onTextSubmit,  }) {
 
 
   return (
-    <div className="textarea-container my-3">
+    <div className="textarea my-3">
       <textarea
       value={input}
       onChange={e => setInput(e.target.value)}
       className="form-control"
       rows="4" // 设置文本区域的行数，根据需要调整
-      placeholder="输入内容"
+      placeholder="输入回答"
       />
  </div>
   );

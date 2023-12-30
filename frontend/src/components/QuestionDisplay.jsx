@@ -56,9 +56,9 @@ function QuestionDisplay({ question}) {
 
 
     return (
-        <div>
+        <>
             {question || "没有问题"}
-        </div>
+        </>
     );
 }
 

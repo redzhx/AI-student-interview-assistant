@@ -107,7 +107,15 @@ async def get_history(request: Request, db: Session = Depends(get_db)):
 async def generate(item: Item):
     # 设置 generate 的 user_prompt
 
-    user_prompt = f"你是培训中学生练习中考自招考试面试环节的教练。你正在辅导学生模拟面试。学生抽到的问题是:{item.question},学生的回答是:{item.user_response}，请对学生进行评价并指导怎样改进。回复内容包括四部分:1.评分(满分10分制)、2.评价学生的回答、3.教学生怎样更好回答这个问题 4.给学生一份参考回答。5. 随机告诉学生一条中考升学面试小技巧。 语言表达友善公正。"
+    user_prompt = f"""
+    你是培训中学生练习中考自招考试面试环节的教练。你正在辅导学生模拟面试。
+    问题是:{item.question},学生的回答是:{item.user_response}。问题回答时限为2分钟。 
+    请对学生的回答进行评价并指导怎样改进。
+    回复内容包括四部分:
+    1.评价学生的回答。请根据问题选择适合的评价角度，包括但不限于回答的完整性、深度和广度、批判性思维、自我表现和自信心、创新思维的等等。 
+    2.你的建议。 怎样更好回答这个问题。
+    要求语言表达友善公正。加上emoji增加可读性,公正友善。
+    """
 
     if item.ai == 'zhipuai':
         stream = call_zhipuai(user_prompt)
@@ -129,10 +137,10 @@ async def cancel_generate_request():
 @app.post('/api/generate-hint')
 async def generate_hint(item: Item):
     # 设置 generate-hint 的 user_prompt
-    user_prompt = f"你是辅导学生参加中学升学面试的老师，针对怎样回答面试问题 '{item.question}'，学生不知道怎么入手，请给一些回答的提示, 让学生能够顺着你的提示完成回答。"
+    user_prompt = f"你是升学面试陪练老师，你的学生不知道怎样在2分钟内回答面试问题 '{item.question}'，请给出提示和思路。字数为100-200字,请加上emoji。"
 
     if item.ai == 'zhipuai':
-        stream = call_zhipuai(item.question, user_prompt)
+        stream = call_zhipuai(user_prompt)
     elif item.ai == 'openai':
         stream = openai_services.call_openai(user_prompt)
     else:
