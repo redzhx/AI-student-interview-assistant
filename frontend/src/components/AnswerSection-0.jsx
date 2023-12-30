@@ -10,7 +10,7 @@ function AnswerSection({ onAnswerSubmit,disabled}) {
     const [isRecording, setIsRecording] = useState(false);
     const [audioUrl, setAudioUrl] = useState(null); // 定义 audioUrl 状态
     const [transcript, setTranscript] = useState(''); // 定义 transcript 状态
-    const [countdown, setCountdown] = useState(20);
+    const [countdown, setCountdown] = useState(120);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [isRecordingMode, setIsRecordingMode] = useState(true); // 默认为录音模式
@@ -24,7 +24,7 @@ function AnswerSection({ onAnswerSubmit,disabled}) {
         setAudioUrl(null);
         setTranscript('');
         setError(null);
-        setCountdown(20); // 重置倒计时
+        setCountdown(120); // 重置倒计时
 
     };
 
@@ -64,7 +64,7 @@ function AnswerSection({ onAnswerSubmit,disabled}) {
             setIsRecording(true);
             setIsRecordingMode(true);
 
-            setCountdown(20); // 重置倒计时
+            setCountdown(120); // 重置倒计时
             countdownTimerRef.current = setInterval(() => {
                 setCountdown(prevCountdown => prevCountdown - 1);
             }, 1000);
@@ -119,7 +119,7 @@ function AnswerSection({ onAnswerSubmit,disabled}) {
             <Card.Body id="answerarea" >
                
                 <Card.Text style={{ whiteSpace: 'pre-line', textAlign: '' }}>
-                <strong className="text-dark">录音限时: {countdown} 秒</strong><br/>
+                <strong className="text-light">限时: {countdown} 秒</strong><br/>
                     {loading && (
                     <Spinner animation="border" variant="primary" role="status">
                     <span className="sr-only">Loading...</span>

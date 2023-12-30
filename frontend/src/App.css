@@ -45,6 +45,12 @@
 
 }
 
+#practicecard{
+  min-height: 200px;
+  border-radius: 25px;
+  padding-left: 15px;
+}
+
 button {
   margin-right: 10px; /* 设置按钮右侧的间距 */
 }
@@ -146,8 +152,6 @@ button {
   width: 30px;
   align-items: center;
   padding: 0px;
-  margin-left: 10px;
-  /* background-color:lightseagreen; */
   border: none;
   cursor: pointer;
 

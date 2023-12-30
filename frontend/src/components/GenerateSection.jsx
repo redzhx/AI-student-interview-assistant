@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useSettings } from './SettingsContext';
 
-import { Button,Col,Card } from 'react-bootstrap';
+import { Button,Row,Col,Card } from 'react-bootstrap';
 
 function GenerateSection({ currentQuestion, answer, onEvaluationGenerated, disabled }) {
     const { aiChoice } = useSettings();
@@ -27,7 +27,7 @@ function GenerateSection({ currentQuestion, answer, onEvaluationGenerated, disab
         }
     };
     const generateEvaluation = async () => {
-        if (!answer) {
+        if (!answer || evaluation) { // 如果没有答案或评价已生成，直接返回
             alert("请先完成答案的输入");
             return;
         }
@@ -79,28 +79,27 @@ function GenerateSection({ currentQuestion, answer, onEvaluationGenerated, disab
 
     return (
         <>
-        
-        <Col md={12} className="mt-3">
-          <Card>
-          <Card.Header className="text-center">
-          <Button className="my-1"
-            onClick={generateEvaluation} 
-            disabled={!answer || isLoading|| disabled} // 确保在没有答案时禁用按钮
-            title={!answer ? "请先完成答案的输入" : ""}
-            >
-            {/* {isLoading ? '生成中...' : '查看评价'} */}
-            生成评价
-        </Button>            </Card.Header>
-            <Card.Body>
-              {/* <Card.Subtitle className="mb-2">你的回答: {answer}</Card.Subtitle> */}
-              <Card.Text style={{   whiteSpace: 'pre-line',textAlign: 'left' }}>
-                {answer} {evaluation}
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-      </>
+            <Row md={12} className="my-3">
+                <Col md={12} className="">
+                    <Button variant="primary" className="my-1"
+                        onClick={generateEvaluation} 
+                        disabled={!answer || isLoading || disabled || evaluation} // 如果没有答案、正在加载、已禁用或已生成评价，则禁用按钮
+                        title={!answer ? "请先完成答案的输入" : ""}
+                    >
+                        查看评价
+                    </Button> 
+                </Col>
+                <Col className="mb-3">
+                    <Card>
+                        <Card.Body>
+                            <Card.Text style={{ whiteSpace: 'pre-line', textAlign: 'left' }}>
+                                {answer} {evaluation}
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
+        </>
     );
 }
-
 export default GenerateSection;

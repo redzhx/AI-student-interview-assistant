@@ -131,24 +131,26 @@ const endPractice = () => {
 };
 
 return (
-  <Container container-lg className="col-md-8 py-4">
-      <div md={12} className="text-left my-4">
-        <h3>  
+  <Container container-lg className=" col-md-8 py-4 my-4">
+    <Row>
+    <Col  className="mt-2 d">
         <Button
                 id="controlbtn" 
-                className="ml-3  shaking-btn outline-primary"
+                className="  shaking-btn outline-primary"
                 onClick={() => setShowControlPanel(true)}
               >
               <i class="fa-solid fa-robot"></i>     
               </Button> 
-       </h3>
-      </div>
+      </Col>
+    </Row>
+    <Row id="practicecard" className="shadow my-4">
+      
       <Row className="mb-3 d-flex justify-content-center">
       {!isQuestionGenerated && (
-        <Col md={6} className="text-center">
+        <Col  className="text-center">
           <br/>
           <br/>
-          <Button variant="outline-primary" size="lg" onClick={fetchAndPlayQuestion} className="mr-2">
+          <Button variant="outline-primary" size="lg" onClick={fetchAndPlayQuestion} className="">
             开始答题
           </Button>
         </Col>
@@ -220,13 +222,25 @@ return (
           
             
         </Col>
+        {/* <Col md={12} className="mt-3 d-flex justify-content-end">
+          <Button variant="outline-primary" onClick={fetchAndPlayQuestion} className="mr-2 btn-icon-only">
+          <i class="fa-solid fa-circle-chevron-right"></i>
+          </Button>
+          <Button  variant="outline-dark" className="btn-icon-only" onClick={endPractice}><i class="fa-solid fa-right-from-bracket"></i></Button>
+          </Col> */}
+      </Row>
+    )}     
+    </Row>      
+    {isQuestionGenerated && (
+      <Row>
         <Col md={12} className="mt-3 d-flex justify-content-end">
           <Button variant="outline-primary" onClick={fetchAndPlayQuestion} className="mr-2 btn-icon-only">
           <i class="fa-solid fa-circle-chevron-right"></i>
           </Button>
-          <Button  variant="outline-dark" className="btn-icon-only" onClick={endPractice}><i class="fa-solid fa-right-from-bracket"></i></Button></Col>
-      </Row>
-    )}           
+          <Button  variant="outline-dark" className="btn-icon-only" onClick={endPractice}><i class="fa-solid fa-right-from-bracket"></i></Button>
+          </Col>
+        </Row>)
+    }
     <PracticeEndModal 
       show={showEndModal} 
       onHide={() => setShowEndModal(false)} 
