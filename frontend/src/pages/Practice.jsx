@@ -43,6 +43,7 @@ function Practice() {
               setIsQuestionGenerated(true);
               setResetKey(prev => prev + 1); // 更新重置键
               setOpen(false);  // 关闭折叠面板
+              setHint('');
               // await generateHint(response.data.question); // 假设问题数据中包含问题文本
 
           } else {
