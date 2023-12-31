@@ -105,50 +105,48 @@ function AnswerSection({ onAnswerSubmit,disabled}) {
 
     };
 
+    // 格式化时间
+    const formatTime = (time) => {
+        const minutes = Math.floor(time / 60);
+        const seconds = time % 60;
+        return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    };
+
     useEffect(() => {
         if (countdown === 0 && isRecording) {
             stopRecording();
+        } else if (isRecording) {
+            countdownTimerRef.current = setInterval(() => {
+                setCountdown(prevCountdown => prevCountdown - 1);
+            }, 1000);
         }
+
+        return () => {
+            clearInterval(countdownTimerRef.current);
+        };
     }, [countdown, isRecording, stopRecording]);
 
-
     return (
-        <div >
-           {isRecordingMode&&(<Card className="my-1">
+        <div id="answerarea" className='py-2'>
+           {isRecordingMode&&(<Card className="my-1 border-1" >
             {/* <Card.Header className="mb-2">回答</Card.Header> */}
-            <Card.Body id="answerarea" >
+            <Card.Body id="answerarea1" className="">
                
                 <Card.Text style={{ whiteSpace: 'pre-line', textAlign: '' }}>
-                <strong className="text-light">限时: {countdown} 秒</strong><br/>
+                <p><strong className="text-light">录音限时: {formatTime(countdown)}</strong><br/>
                     {loading && (
                     <Spinner animation="border" variant="primary" role="status">
                     <span className="sr-only">Loading...</span>
                     </Spinner>
-                )}
-                {transcript && <p>{transcript}</p>}
+                )}</p>
+                {transcript && <p>你的回答:{transcript}</p>}
                 {error && <p>Error: {error}</p>}
                 <br/>
                 {audioUrl && <audio src={audioUrl} controls />}
                 </Card.Text>
             </Card.Body>
         </Card>)}
-            {/* {!isRecordingMode && (<TextInput onTextSubmit={onAnswerSubmit} disabled={isRecording} />)}
-            <Card id="answerarea">
-            <Card.Body className="text-center">
-            <Button variant="outline-primary" onClick={toggleAnswerMode} disabled={disabled}>
-                <i className={isRecordingMode ? 'fa-solid fa-keyboard' : 'fa-solid fa-xmark'}></i>
-                {isRecordingMode ? ' ' : ' '}
-            </Button>
-            <Button
-            className="btn-danger my-1"
-            onClick={isRecording ? stopRecording : startRecording}
-            disabled={isRecording && countdown === 0}
-            >
-            <i className={`fa-${isRecording ? 'regular fa-circle-stop' : 'solid fa-microphone'} fa-lg`}></i>
-            </Button>
-            
-            </Card.Body>
-          </Card> */}
+
         <Row>
             <Col>
             {!isRecordingMode && (<TextInput onTextSubmit={onAnswerSubmit} disabled={isRecording} />)}
@@ -156,13 +154,13 @@ function AnswerSection({ onAnswerSubmit,disabled}) {
                 <i className={isRecordingMode ? 'fa-solid fa-keyboard' : 'fa-solid fa-xmark'}></i>
                 {isRecordingMode ? ' ' : ' '}
             </Button>
-            <Button
-            className="btn-danger my-1"
+            {isRecordingMode && (<Button variant="danger"
+            className=" my-1"
             onClick={isRecording ? stopRecording : startRecording}
             disabled={isRecording && countdown === 0}
             >
             <i className={`fa-${isRecording ? 'regular fa-circle-stop' : 'solid fa-microphone'} fa-lg`}></i>
-            </Button>
+            </Button>)}
             </Col>
         </Row>
         </div>

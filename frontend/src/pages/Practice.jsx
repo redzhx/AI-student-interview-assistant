@@ -44,6 +44,7 @@ function Practice() {
               setResetKey(prev => prev + 1); // 更新重置键
               setOpen(false);  // 关闭折叠面板
               setHint('');
+
               // await generateHint(response.data.question); // 假设问题数据中包含问题文本
 
           } else {
@@ -120,7 +121,7 @@ const generateHint = async (question) => {
 
 //处理生成的评价
   const handleEvaluationGenerated = (generatedEvaluation) => {
-    setEvaluation(generatedEvaluation);
+    setEvaluation(generatedEvaluation); // 更新评价状态
     setIsEvaluationGenerated(true); // 设置生成评价后的状态
     setQuestionCount(questionCount + 1); // 递增答题计数器
   };
@@ -150,6 +151,7 @@ return (
         <Col  className="text-center">
           <br/>
           <br/>
+          <br/>
           <Button variant="outline-primary" size="lg" onClick={fetchAndPlayQuestion} className="">
             开始答题
           </Button>
@@ -172,24 +174,30 @@ return (
               </Button></h5>
             </Col>
         </Row>
-        <Row>
-          <Col md={12}>
-            {/* 按钮用于控制折叠卡的展开和折叠 */}
-            {/* 折叠卡内容 */}
-            <Collapse in={open}>
-              <div id="hint-collapse">
+        
+<Row>
+    <Col md={12} className="mb-4">
+        <Collapse in={open}>
+            <div id="hint-collapse">
                 <Card id="hint">
-                  <Card.Body>
-                  <Card.Text  style={{   whiteSpace: 'pre-line',textAlign: 'left' }}>
-                   
-                    {hint}
-                  </Card.Text>
-                  </Card.Body>
+                    <Card.Body>
+                        <Card.Text style={{ whiteSpace: 'pre-line', textAlign: 'left' }}>
+                           💡提示: {hint}
+                        </Card.Text>
+                        <Button 
+                            id="round-btn"
+                            variant="outline-success" 
+                            size="sm" 
+                            onClick={handleToggleHint}
+                        >
+                            <i class="fa-solid fa-angles-up"></i>
+                        </Button>
+                    </Card.Body>
                 </Card>
-              </div>
-            </Collapse>
-          </Col>
-        </Row>      
+            </div>
+        </Collapse>
+    </Col>
+</Row>  
         {!isEvaluationGenerated && (
         <Row>
           <Col md={12} className="mb-3">
@@ -214,20 +222,16 @@ return (
               currentQuestion={currentQuestion}
               answer={answer} 
               onEvaluationGenerated={handleEvaluationGenerated} 
-              aiChoice={aiChoice} 
-              disabled={!answer}
-              // disabled={!answer || isEvaluationGenerated}
+              // aiChoice={aiChoice} 
+              // disabled={!answer}
+              // evaluation={evaluation} // 这里传递 evaluation prop
+              resetKey={resetKey} // 传递重置键作为重置信号
 
+
+              // disabled={!answer || isEvaluationGenerated}
             />              
-          
-            
         </Col>
-        {/* <Col md={12} className="mt-3 d-flex justify-content-end">
-          <Button variant="outline-primary" onClick={fetchAndPlayQuestion} className="mr-2 btn-icon-only">
-          <i class="fa-solid fa-circle-chevron-right"></i>
-          </Button>
-          <Button  variant="outline-dark" className="btn-icon-only" onClick={endPractice}><i class="fa-solid fa-right-from-bracket"></i></Button>
-          </Col> */}
+
       </Row>
     )}     
     </Row>      

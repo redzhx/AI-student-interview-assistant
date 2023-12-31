@@ -1528,7 +1528,8 @@ input[type="button"].btn-block {
 .card-header {
   padding: 1rem 1rem;
   margin-bottom: 0;
-  background-color: #f6f9fc;
+  background-color: #f0f2fc;
+  /* #f6f9fc; */
   border-bottom: 0.0625rem solid rgba(0, 0, 0, 0.05);
 }
 .card-header:first-child {
@@ -1540,7 +1541,7 @@ input[type="button"].btn-block {
 
 .card-footer {
   /* padding: 1.25rem 1.5rem; */
-  background-color: #f6f9fc;
+  background-color:  #f0f2fc;
   border-top: 0.0625rem solid rgba(0, 0, 0, 0.05);
 }
 .card-footer:last-child {

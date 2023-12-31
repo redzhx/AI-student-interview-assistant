@@ -36,13 +36,32 @@
     transform: rotate(360deg);
   }
 } 
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont,  sans-serif,  'Spartan','Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    'PingFang SC', 'Microsoft YaHei', Arial; 
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #fbfbff;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #525f7f;
 
-#answerarea{
-  background-color: #f8f9fa
 }
-#hint{
-  background-color: #f1f9f7
+#answerarea, #judgearea{
+  background-color: #f0f2fc;
+  border-radius: 5px;
+}
 
+#answerarea1{
+  background-color: #fcfbff;
+}
+
+#hint{
+  background-color: #f0f2fc;
+  
+  /* #f1f9f7 */
 }
 
 #practicecard{
