@@ -78,12 +78,14 @@ function History() {
         <h2>练习记录</h2>
           <p class="lead">⭐️强化记忆小妙招：回顾、分享、交流⭐️</p>
           <input 
-          type="text" 
-          placeholder="搜索记录..." 
-          onChange={(e) => setSearchTerm(e.target.value)}
-          value={searchTerm}
-          style={{ marginBottom: '20px' }}
-        />
+            type="text" 
+            placeholder="搜索记录..." 
+            onChange={(e) => setSearchTerm(e.target.value)}
+            value={searchTerm}
+            className="search-input"
+          />
+          <i className="fa fa-search search-icon"></i>
+
       </div>
       <div class="row justify-content-center">
         <div class="col-12 col-md-8">
