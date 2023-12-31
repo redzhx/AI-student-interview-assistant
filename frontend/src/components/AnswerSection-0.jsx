@@ -133,35 +133,51 @@ function AnswerSection({ onAnswerSubmit,disabled}) {
             <Card.Body id="answerarea1" className="">
                
                 <Card.Text style={{ whiteSpace: 'pre-line', textAlign: '' }}>
-                <p><strong className="text-light">录音限时: {formatTime(countdown)}</strong><br/>
+                <p><strong className="text-light">⏰ {formatTime(countdown)}</strong><br/>
                     {loading && (
                     <Spinner animation="border" variant="primary" role="status">
                     <span className="sr-only">Loading...</span>
                     </Spinner>
                 )}</p>
-                {transcript && <p>你的回答:{transcript}</p>}
+                {transcript && <p>🎙️  {transcript}</p>}
                 {error && <p>Error: {error}</p>}
                 <br/>
-                {audioUrl && <audio src={audioUrl} controls />}
+                {audioUrl && <audio src={audioUrl} controls />}<br/>
+                <Button variant="danger" size="lg"
+                    className=" btn-icon-only record-btn shadow my-1"
+                    onClick={isRecording ? stopRecording : startRecording}
+                    disabled={isRecording && countdown === 0}
+                    >
+                    <i className={`fa-${isRecording ? 'regular fa-circle-stop' : 'solid fa-microphone'} fa-lg`}></i>
+                    </Button>
                 </Card.Text>
             </Card.Body>
         </Card>)}
 
-        <Row>
-            <Col>
-            {!isRecordingMode && (<TextInput onTextSubmit={onAnswerSubmit} disabled={isRecording} />)}
-            <Button variant="outline-primary" onClick={toggleAnswerMode} disabled={disabled}>
+        <Row>        
+            <Col md="12">
+            {!isRecordingMode && <TextInput onTextSubmit={onAnswerSubmit} disabled={isRecording} />}
+            </Col>
+            <Col className="d-flex justify-content-end align-items-center">
+            <Button variant="secondary" className="mr-2" size="sm" onClick={toggleAnswerMode} disabled={disabled}>
                 <i className={isRecordingMode ? 'fa-solid fa-keyboard' : 'fa-solid fa-xmark'}></i>
                 {isRecordingMode ? ' ' : ' '}
             </Button>
-            {isRecordingMode && (<Button variant="danger"
+            </Col>
+            {/* <Col className="align-items-right">
+            {!isRecordingMode && (<TextInput onTextSubmit={onAnswerSubmit} disabled={isRecording} />)}
+            <Button variant="secondary" className="" size='sm' onClick={toggleAnswerMode} disabled={disabled}>
+                <i className={isRecordingMode ? 'fa-solid fa-keyboard' : 'fa-solid fa-xmark'}></i>
+                {isRecordingMode ? ' ' : ' '}
+            </Button> */}
+            {/* {isRecordingMode && (<Button variant="danger"
             className=" my-1"
             onClick={isRecording ? stopRecording : startRecording}
             disabled={isRecording && countdown === 0}
             >
             <i className={`fa-${isRecording ? 'regular fa-circle-stop' : 'solid fa-microphone'} fa-lg`}></i>
-            </Button>)}
-            </Col>
+            </Button>)} */}
+            {/* </Col> */}
         </Row>
         </div>
       );

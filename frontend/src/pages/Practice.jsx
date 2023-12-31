@@ -23,7 +23,7 @@ function Practice() {
   const { aiChoice } = useSettings();
   const [hint, setHint] = useState('');
   const [open, setOpen] = useState(false);  // 控制折叠面板的开关
-  const [loadingHint, setLoadingHint] = useState(false);
+  // const [loadingHint, setLoadingHint] = useState(false);
   const { ttsService } = useSettings(); // 从 SettingsContext 获取 TTS 配置
   const [showControlPanel, setShowControlPanel] = useState(false);
 
@@ -59,7 +59,7 @@ function Practice() {
 
 // 定义生成提示的函数
 const generateHint = async (question) => {
-  setLoadingHint(true);
+  // setLoadingHint(true);
   setHint(''); // 清空先前的提示
   try {
     const response = await fetch(`${apiUrl}/api/generate-hint`, {
@@ -76,7 +76,7 @@ const generateHint = async (question) => {
     // 处理流数据
     reader.read().then(function processStream({ done, value }) {
       if (done) {
-        setLoadingHint(false);
+        // setLoadingHint(false);
         // setOpen(true); // 当读取完成时展开提示区域
         return;
       }
@@ -92,17 +92,17 @@ const generateHint = async (question) => {
 
   } catch (error) {
     console.error('Error fetching hint:', error);
-    setLoadingHint(false);
+    // setLoadingHint(false);
   }
 };
 
-  // 定义处理点击生成提示按钮的函数
-  const handleGenerateHintClick = () => {
-    if (currentQuestion && currentQuestion.question) {
-      generateHint(currentQuestion.question);
-      setOpen(true);  // 打开折叠面板以显示提示
-    }
-  };
+  // // 定义处理点击生成提示按钮的函数
+  // const handleGenerateHintClick = () => {
+  //   if (currentQuestion && currentQuestion.question) {
+  //     generateHint(currentQuestion.question);
+  //     setOpen(true);  // 打开折叠面板以显示提示
+  //   }
+  // };
     // 定义处理点击生成提示按钮的函数
     const handleToggleHint = () => {
       // 如果提示未生成，则先生成提示
@@ -206,7 +206,7 @@ return (
                  <AnswerSection 
                   onAnswerSubmit={handleAnswerSubmit} 
                   key={resetKey} // 使用 key 来重置组件状态
-                  // disabled={isEvaluationGenerated}
+                  disabled={isEvaluationGenerated}
                   /> 
               {/* </Card.Body>
             </Card> */}
@@ -223,8 +223,7 @@ return (
               answer={answer} 
               onEvaluationGenerated={handleEvaluationGenerated} 
               // aiChoice={aiChoice} 
-              // disabled={!answer}
-              // evaluation={evaluation} // 这里传递 evaluation prop
+              disabled={!answer}
               resetKey={resetKey} // 传递重置键作为重置信号
 
 

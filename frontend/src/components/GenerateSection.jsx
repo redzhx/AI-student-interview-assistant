@@ -5,7 +5,7 @@ import { useSettings } from './SettingsContext';
 
 import {Card } from 'react-bootstrap';
 
-function GenerateSection({ currentQuestion, answer, onEvaluationGenerated ,resetKey}) {
+function GenerateSection({ currentQuestion, answer, onEvaluationGenerated ,resetKey,disabled}) {
     const { aiChoice } = useSettings();
     const [evaluation, setEvaluation] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -87,8 +87,8 @@ function GenerateSection({ currentQuestion, answer, onEvaluationGenerated ,reset
         <div id="judgearea" className='mb-3'>
             <Card>
                 <Card.Header id="judgeareah" variant="primary" className="mb-1 py-2 text-center"
-                    onClick={generateEvaluation} 
-                    // disabled={!answer || isLoading || disabled || evaluation} // 如果没有答案、正在加载、已禁用或已生成评价，则禁用按钮
+                    onClick={!evaluation ? generateEvaluation : null} // 仅在没有评价时才能点击
+                    disabled={!answer || isLoading || disabled || evaluation} // 如果没有答案、正在加载、已禁用或已生成评价，则禁用按钮
                     title={!answer ? "请先输入答案" : ""}
                 >
                     <h6 className='text-primary mt-2'><i class="fa-solid fa-robot"></i> 评价</h6>

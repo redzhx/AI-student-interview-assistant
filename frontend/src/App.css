@@ -59,9 +59,9 @@ body {
 }
 
 #hint{
-  background-color: #f0f2fc;
+  background-color:  #f6f8f8
   
-  /* #f1f9f7 */
+ 
 }
 
 #practicecard{
@@ -176,7 +176,12 @@ button {
 
 }
 
+#record-btn{
+  border-radius: 50%;
+  height: 60px;
+  width: 60px;
 
+}
 
 /* animation */
 @keyframes bounce {
