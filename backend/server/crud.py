@@ -2,6 +2,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import text
 from sqlalchemy import desc
+from sqlalchemy import or_
 from datetime import datetime
 from . import models, schemas
 import json
@@ -36,13 +37,22 @@ def delete_record(db: Session, id: int):
 
 
 # 增加查询功能
-def search_records(db: Session, answer: str):
-    return db.query(models.Record).filter(models.Record.answer.ilike(f"%{answer}%")).order_by(desc(models.Record.updated_at)).all()
+# def search_records(db: Session, answer: str):
+#     return db.query(models.Record).filter(models.Record.answer.ilike(f"%{answer}%")).order_by(desc(models.Record.updated_at)).all()
 
-def format_datetime(dt):
-    return dt.strftime('%Y-%m-%d %H:%M:%S')
+# def format_datetime(dt):
+#     return dt.strftime('%Y-%m-%d %H:%M:%S')
 
-
+# 搜索功能 SQL Alchemy 的 ilike 方法，对大小写不敏感
+def get_records_by_search(db: Session, search: str):
+    search = f"%{search}%"
+    return db.query(models.Record).filter(
+        or_(
+            models.Record.question.ilike(search),
+            models.Record.answer.ilike(search),
+            # models.Record.content.ilike(search)
+        )
+    ).all()
 
 # 新增：创建音频转写记录
 def create_transcription(db: Session, transcription: schemas.TranscriptionCreate):

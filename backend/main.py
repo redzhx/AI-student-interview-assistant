@@ -1,9 +1,10 @@
 # backend/main.py
-from fastapi import FastAPI, Request, Depends, HTTPException, UploadFile, File
+from fastapi import FastAPI, Request, Depends, HTTPException, UploadFile, File,Query
 from fastapi.responses import HTMLResponse, JSONResponse,StreamingResponse,FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
+from typing import Optional
 from server import crud, models, schemas
 from server.database import SessionLocal, engine
 from utils.question_manager import get_random_question, get_random_questions
@@ -11,6 +12,7 @@ from utils.ai_minimax import text_to_speech as minimax_tts
 from sqlalchemy.orm import Session
 from dotenv import load_dotenv
 from pathlib import Path
+
 from utils.ai_zhipuai import call_zhipuai
 from utils.ai_openai import OpenAIServices
 import shutil
@@ -96,12 +98,12 @@ async def get_interview():
     return questions
 
 @app.get("/api/history", response_class=JSONResponse)
-async def get_history(request: Request, db: Session = Depends(get_db)):
-    records = crud.get_records(db)
+async def get_history(search: Optional[str] = None, db: Session = Depends(get_db)):
+    if search:
+        records = crud.get_records_by_search(db, search)
+    else:
+        records = crud.get_records(db)
     return records
-    # request: Request, return templates.TemplateResponse("history.html", {"request": request, "records": records})
-
-
 
 @app.post('/api/generate')
 async def generate(item: Item):

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
+
 import axios from 'axios';
 import { Card, Button, Collapse, Modal } from 'react-bootstrap'; // 导入 React Bootstrap 组件
-import 'bootstrap/dist/css/bootstrap.min.css'; // 导入 Bootstrap 样式
-import '../App.css';
+// import 'bootstrap/dist/css/bootstrap.min.css'; // 导入 Bootstrap 样式
+// import '../App.css';
 
 function History() {
   const [records, setRecords] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [openCollapse, setOpenCollapse] = useState({});
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [recordToDelete, setRecordToDelete] = useState(null);
@@ -14,9 +16,13 @@ function History() {
   useEffect(() => {
     const fetchRecords = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/api/history`);
+        const query = searchTerm ? `?search=${encodeURIComponent(searchTerm)}` : '';
+        const response = await axios.get(`${apiUrl}/api/history${query}`); // 使用 query
         if (Array.isArray(response.data)) {
-          setRecords(response.data.map(record => ({...record, open: false})));
+          const sortedRecords = response.data
+            .map(record => ({ ...record, open: false }))
+            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+          setRecords(sortedRecords);
         } else {
           console.log('Response data is not an array:', response.data);
         }
@@ -25,9 +31,8 @@ function History() {
       }
     };
   
-
     fetchRecords();
-  }, [apiUrl]);
+  }, [searchTerm, apiUrl]);
 
   const handleToggleCollapse = index => {
     setOpenCollapse(prevState => ({...prevState, [index]: !prevState[index]}));
@@ -58,12 +63,27 @@ function History() {
     // 实现添加到复习计划逻辑
     console.log("Adding to review plan", record);
   };
-  // 更改显示1219
+
+  const filteredRecords = searchTerm
+    ? records.filter(record =>
+      record.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      record.answer.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      record.content.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    : records;
+
   return (
     <section class="section section-lg" id="history">
       <div class="col-12 text-center mt-4 mb-4 mb-lg-5">
         <h2>练习记录</h2>
           <p class="lead">⭐️强化记忆小妙招：回顾、分享、交流⭐️</p>
+          <input 
+          type="text" 
+          placeholder="搜索记录..." 
+          onChange={(e) => setSearchTerm(e.target.value)}
+          value={searchTerm}
+          style={{ marginBottom: '20px' }}
+        />
       </div>
       <div class="row justify-content-center">
         <div class="col-12 col-md-8">
