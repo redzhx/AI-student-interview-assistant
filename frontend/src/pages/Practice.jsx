@@ -44,48 +44,23 @@ function Practice() {
   };
 
 
-  const resetAllContent = () => {
+  const resetContent = () => {
     setCurrentQuestion('');
     setCustomQuestion(''); // 重置自定义题目
     setAnswer('');
     setEvaluation('');
     setIsEvaluationGenerated(false);
-    setQuestionCount(0); // 根据需要调整
+    // setQuestionCount(0); // 根据需要调整
     setHint('');
-    setResetKey(prev => prev + 1); // 更新重置键
+    // setResetKey(prev => prev + 1); // 更新重置键
     setIsQuestionGenerated(false); // 标记题目未生成
 
     // 其他需要重置的状态...
   };
 
-
-  // 自定义题目的输入处理
-  const handleCustomQuestionChange = (event) => {
-    setCustomQuestion(event.target.value);
-  };
-
-  const submitCustomQuestion = () => {
-    const questionWithSymbol = customQuestion + " ☆"; // 在题目后面加上符号
-    setCurrentQuestion({ question: questionWithSymbol });
-
-    setIsQuestionGenerated(true); // 标记题目已生成
-    setShowCustomQuestionInput(false); // 隐藏自定义题目输入框
-  };
-
-  // 根据题目来源渲染题目显示
-  const renderQuestion = () => {
-    return (
-      <div>
-        {/* <QuestionDisplay question={currentQuestion.question} /> */}
-        {/* <span>来源: {currentQuestion.source}</span> */}
-      </div>
-    );
-  };
-
   // 统一的开始答题函数
   const startPractice = async () => {
-    resetAllContent(); // 开始新一轮前重置内容
-
+    resetContent();
     switch (mode) {
       case 'random':
         await fetchAndPlayQuestion();
@@ -104,6 +79,52 @@ function Practice() {
         console.error('未知的出题模式');
     }
   };
+
+
+  // 自定义题目的输入处理
+  const handleCustomQuestionChange = (event) => {
+    setCustomQuestion(event.target.value);
+  };
+
+  const submitCustomQuestion = () => {
+    const questionWithSymbol = customQuestion + " ☆"; // 在题目后面加上符号
+    setCurrentQuestion({ question: questionWithSymbol });
+
+    setIsQuestionGenerated(true); // 标记题目已生成
+    setShowCustomQuestionInput(false); // 隐藏自定义题目输入框
+    setCustomQuestion(''); // 添加这行来重置 customQuestion 为初始状态
+
+  };
+
+  // 根据题目来源渲染题目显示
+  const renderQuestion = () => {
+    return (
+      <div>
+        {/* <QuestionDisplay question={currentQuestion.question} /> */}
+        {/* <span>来源: {currentQuestion.source}</span> */}
+      </div>
+    );
+  };
+
+    // 根据模式渲染标题
+    const renderTitle = () => {
+      let title = '';
+      switch (mode) {
+        case 'random':
+          title = '随机出题';
+          break;
+        case 'ai':
+          title = 'AI出题（开发中）';
+          break;
+        case 'custom':
+          title = '自己出题';
+          break;
+        // ... 可以添加更多模式的处理 ...
+        default:
+          title = '选择出题模式（开发中）';
+      }
+      return <h2 className="text-center">{title}</h2>;
+    };
 
     // 获取问题的函数
     const fetchAndPlayQuestion = async () => {
@@ -200,7 +221,8 @@ const endPractice = () => {
 
 return (
   <Container container-lg className=" col-md-8 py-4 my-4">
-   
+         {renderTitle()}  {/* 显示当前模式的标题 */}
+
     <Row>
     <Col  className="mt-2 ">
         <Button
