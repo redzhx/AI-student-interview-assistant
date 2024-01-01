@@ -3,7 +3,7 @@ import React from 'react';
 import { Button, Form ,Offcanvas} from 'react-bootstrap';
 import { useSettings } from './SettingsContext'; // 确保路径正确
 
-function ControlPanel({ show, onHide }) {
+function ControlPanel({ show, onHide,setMode }) {
 
   const { isMuted, setIsMuted, ttsService, setTtsService, sttService, setSttService, aiChoice, setAiChoice } = useSettings();
   const handleTtsServiceChange = (selectedService) => {
@@ -14,6 +14,7 @@ function ControlPanel({ show, onHide }) {
   const toggleMute = () => {
     setIsMuted(!isMuted);
   };
+
 
   return (
 
@@ -30,7 +31,7 @@ function ControlPanel({ show, onHide }) {
               {isMuted ? "" : ""}
             </Button>
            <Form.Group>
-              <Form.Label>文本转语音接口</Form.Label>
+              <Form.Label>文本转语音服务</Form.Label>
               <Form.Control 
                 as="select" 
                 value={ttsService}
@@ -43,7 +44,7 @@ function ControlPanel({ show, onHide }) {
               </Form.Control>
             </Form.Group>
             <Form.Group>
-              <Form.Label>语音转文本接口</Form.Label>
+              <Form.Label>语音转文本服务</Form.Label>
               <Form.Control 
                 as="select" 
                 value={sttService}
@@ -53,7 +54,7 @@ function ControlPanel({ show, onHide }) {
               </Form.Control>
             </Form.Group>
             <Form.Group>
-              <Form.Label>生成评价接口</Form.Label>
+              <Form.Label>生成评价服务</Form.Label>
               <Form.Control 
                 as="select" 
                 value={aiChoice}
@@ -63,9 +64,25 @@ function ControlPanel({ show, onHide }) {
                 <option value="openai">OpenAI</option>
               </Form.Control>
             </Form.Group>
-
-          </Form>
-          </Offcanvas.Body>
+            {/* 出题模式选择 */}
+            <br/>
+            <div className='bg-white py-3'>
+            <h6>选择出题方式</h6>
+              <Button variant="primary" size="sm" className="my-3" onClick={() => setMode('random')}>
+                随机真题
+              </Button>
+              <Button variant="success" size="sm"className="my-3" onClick={() => setMode('custom')}>
+                自己出题
+              </Button>
+              <Button variant="warning" size="sm"className="my-3" onClick={() => setMode('ai')}>
+                AI出题
+              </Button>
+              <Button variant="danger"  size="sm" className="my-3"  onClick={() => setMode('library')}>
+                查看题库
+              </Button><br/>
+            </div>
+        </Form>
+        </Offcanvas.Body>
     </Offcanvas>
     
   );

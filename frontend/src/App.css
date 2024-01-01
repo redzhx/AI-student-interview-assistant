@@ -74,6 +74,12 @@ button {
   margin-right: 10px; /* 设置按钮右侧的间距 */
 }
 
+.inputbtn {
+  width:70px;
+  margin:0;
+  padding: 0;
+}
+
 .footer {
   text-align: center;
   margin-top: auto; /* 将页脚顶部距离上方内容自动拉伸 */
@@ -176,12 +182,6 @@ button {
 
 }
 
-#record-btn{
-  border-radius: 50%;
-  height: 60px;
-  width: 60px;
-
-}
 
 /* animation */
 @keyframes bounce {

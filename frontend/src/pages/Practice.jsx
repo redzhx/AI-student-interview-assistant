@@ -12,7 +12,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css';
 
 function Practice() {
+  const [mode, setMode] = useState('random'); // 默认模式为随机
+  const [customQuestion, setCustomQuestion] = useState(''); // 用户自定义题目
+  const [showCustomQuestionInput, setShowCustomQuestionInput] = useState(false); // 新增状态
+
   const [currentQuestion, setCurrentQuestion] = useState({});
+  const [showModeSelection, setShowModeSelection] = useState(true); // 新增状态用于控制是否显示模式选择界面
+
   const [answer, setAnswer] = useState(''); // 用户的回答
   const [evaluation, setEvaluation] = useState('');
   const [isEvaluationGenerated, setIsEvaluationGenerated] = useState(false);
@@ -29,6 +35,75 @@ function Practice() {
 
 
   const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+  
+  const handleModeSelection = (selectedMode) => {
+    setMode(selectedMode);
+    setShowCustomQuestionInput(selectedMode === 'custom'); // 当选择自定义模式时显示输入框
+
+    // 根据选择的模式进行相应操作...
+  };
+
+
+  const resetAllContent = () => {
+    setCurrentQuestion('');
+    setCustomQuestion(''); // 重置自定义题目
+    setAnswer('');
+    setEvaluation('');
+    setIsEvaluationGenerated(false);
+    setQuestionCount(0); // 根据需要调整
+    setHint('');
+    setResetKey(prev => prev + 1); // 更新重置键
+    setIsQuestionGenerated(false); // 标记题目未生成
+
+    // 其他需要重置的状态...
+  };
+
+
+  // 自定义题目的输入处理
+  const handleCustomQuestionChange = (event) => {
+    setCustomQuestion(event.target.value);
+  };
+
+  const submitCustomQuestion = () => {
+    const questionWithSymbol = customQuestion + " ☆"; // 在题目后面加上符号
+    setCurrentQuestion({ question: questionWithSymbol });
+
+    setIsQuestionGenerated(true); // 标记题目已生成
+    setShowCustomQuestionInput(false); // 隐藏自定义题目输入框
+  };
+
+  // 根据题目来源渲染题目显示
+  const renderQuestion = () => {
+    return (
+      <div>
+        {/* <QuestionDisplay question={currentQuestion.question} /> */}
+        {/* <span>来源: {currentQuestion.source}</span> */}
+      </div>
+    );
+  };
+
+  // 统一的开始答题函数
+  const startPractice = async () => {
+    resetAllContent(); // 开始新一轮前重置内容
+
+    switch (mode) {
+      case 'random':
+        await fetchAndPlayQuestion();
+        break;
+      case 'ai':
+        // TODO: 调用AI出题API
+        break;
+      case 'custom':
+        setShowCustomQuestionInput(true); // 在自定义模式下重新显示输入框
+        setCurrentQuestion({ question: customQuestion, source: '用户自定义' });
+        setIsQuestionGenerated(true);
+        setCustomQuestion(''); // 重置自定义题目
+
+        break;
+      default:
+        console.error('未知的出题模式');
+    }
+  };
 
     // 获取问题的函数
     const fetchAndPlayQuestion = async () => {
@@ -38,7 +113,6 @@ function Practice() {
               setCurrentQuestion(response.data);
               setIsEvaluationGenerated(false); // 重置生成评价状态
               setAnswer(''); // 清空答案
-              // setAudioUrl(''); // 清空录音 URL
               setEvaluation(''); // 清空评价
               setIsQuestionGenerated(true);
               setResetKey(prev => prev + 1); // 更新重置键
@@ -96,13 +170,6 @@ const generateHint = async (question) => {
   }
 };
 
-  // // 定义处理点击生成提示按钮的函数
-  // const handleGenerateHintClick = () => {
-  //   if (currentQuestion && currentQuestion.question) {
-  //     generateHint(currentQuestion.question);
-  //     setOpen(true);  // 打开折叠面板以显示提示
-  //   }
-  // };
     // 定义处理点击生成提示按钮的函数
     const handleToggleHint = () => {
       // 如果提示未生成，则先生成提示
@@ -133,8 +200,9 @@ const endPractice = () => {
 
 return (
   <Container container-lg className=" col-md-8 py-4 my-4">
+   
     <Row>
-    <Col  className="mt-2 d">
+    <Col  className="mt-2 ">
         <Button
                 id="controlbtn" 
                 className="  shaking-btn outline-primary"
@@ -143,18 +211,32 @@ return (
               <i class="fa-solid fa-robot"></i>     
               </Button> 
       </Col>
+      <Col md="8" className="my-3">
+     {/* 出题和答题界面 */}
+      {/* 用户自定义题目输入 */}
+      {mode === 'custom' && showCustomQuestionInput && (
+        <div>
+          <input  className="me-3 border-0 bg-secondary" type="text"       
+          placeholder="输入你自己的题目"
+        value={customQuestion} onChange={handleCustomQuestionChange} />
+          <Button variant="success" size="sm" onClick={submitCustomQuestion}>提交</Button>
+        </div>
+      )}
+        {isQuestionGenerated && renderQuestion()}
+   </Col>
     </Row>
-    <Row id="practicecard" className="shadow my-4">
-      
+    <Row id="practicecard" className="shadow mb-4">
+    
       <Row className="mb-3 d-flex justify-content-center">
+      
       {!isQuestionGenerated && (
         <Col  className="text-center">
           <br/>
           <br/>
           <br/>
-          <Button variant="outline-primary" size="lg" onClick={fetchAndPlayQuestion} className="">
+          <Button variant="outline-primary" size="lg" onClick={startPractice} className="">
             开始答题
-          </Button>
+        </Button>
         </Col>
         )}
       </Row>
@@ -237,7 +319,7 @@ return (
     {isQuestionGenerated && (
       <Row>
         <Col md={12} className="mt-3 d-flex justify-content-end">
-          <Button variant="outline-primary" onClick={fetchAndPlayQuestion} className="mr-2 btn-icon-only">
+        <Button variant="outline-primary" onClick={startPractice} className="mr-2 btn-icon-only">
           <i class="fa-solid fa-circle-chevron-right"></i>
           </Button>
           <Button  variant="outline-dark" className="btn-icon-only" onClick={endPractice}><i class="fa-solid fa-right-from-bracket"></i></Button>
@@ -249,8 +331,10 @@ return (
       onHide={() => setShowEndModal(false)} 
       questionCount={questionCount}
     />
-    <ControlPanel show={showControlPanel} onHide={() => setShowControlPanel(false)} />
-  </Container>
+    {/* 控制面板的显示 */}
+
+    <ControlPanel show={showControlPanel} onHide={() => setShowControlPanel(false)} setMode={handleModeSelection}  />
+    </Container>
 
 );
 }

@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect,useCallback } from 'react';
 import TextInput from './TextInput';
 import axios from 'axios';
-import { Button,Spinner,Card,Row,Col} from 'react-bootstrap';
+import { Button,Spinner,Card,Row,Col,Badge} from 'react-bootstrap';
 import '../App.css';
 
 function AnswerSection({ onAnswerSubmit,disabled}) {
@@ -143,7 +143,7 @@ function AnswerSection({ onAnswerSubmit,disabled}) {
                 {error && <p>Error: {error}</p>}
                 <br/>
                 {audioUrl && <audio src={audioUrl} controls />}<br/>
-                <Button variant="danger" size="lg"
+                <Button variant="danger" 
                     className=" btn-icon-only record-btn shadow my-1"
                     onClick={isRecording ? stopRecording : startRecording}
                     disabled={isRecording && countdown === 0}
@@ -158,9 +158,9 @@ function AnswerSection({ onAnswerSubmit,disabled}) {
             <Col md="12">
             {!isRecordingMode && <TextInput onTextSubmit={onAnswerSubmit} disabled={isRecording} />}
             </Col>
-            <Col className="d-flex justify-content-end align-items-center">
-            <Button variant="secondary" className="mr-2" size="sm" onClick={toggleAnswerMode} disabled={disabled}>
-                <i className={isRecordingMode ? 'fa-solid fa-keyboard' : 'fa-solid fa-xmark'}></i>
+            <Col className=" align-items-center">
+            <Button variant=""  className="btn-icon inputbtn" size="sm" onClick={toggleAnswerMode} disabled={disabled}>
+                <i className={isRecordingMode ? 'fa-solid fa-keyboard' : 'fa-solid fa-xmark'}> <Badge bg="" className="text-light">输入</Badge> </i>
                 {isRecordingMode ? ' ' : ' '}
             </Button>
             </Col>
