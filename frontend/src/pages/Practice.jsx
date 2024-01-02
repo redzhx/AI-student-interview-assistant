@@ -265,7 +265,7 @@ const handleTabChange = (tabKey) => {
 
 
 return (
-  <Container  className="py-4 my-4">
+  <Container  className="py-4 my-4 ">
     {renderTitle()}  {/* 显示当前模式的标题 */}
     {/* 控制面板按钮 */}    
     <div  className="mt-2 ">
@@ -277,7 +277,7 @@ return (
         <i class="fa-solid fa-robot"></i>     
         </Button> 
     </div>
-    <Row className=" justify-content-center">
+    <Row className="justify-content-center">
       <Col lg={8} className="practicecard shadow my-4">
         {/* 自定义题目 */}
         <div   className="my-3">
@@ -287,7 +287,7 @@ return (
               <div>
                 <input  className="me-3 border-0 bg-secondary" type="text"       
                 placeholder="输入你自己的题目"
-              value={customQuestion} onChange={handleCustomQuestionChange} />
+                value={customQuestion} onChange={handleCustomQuestionChange} />
                 <Button variant="success" size="sm" onClick={submitCustomQuestion}>提交</Button>
               </div>
             )}
@@ -340,17 +340,13 @@ return (
                   </div>
               </Collapse>
           </Col>
-          
-        
-            
-          
         </>
       )}
       </Col>
     </Row>
 
     {isQuestionGenerated && (    
-    <Row>
+    <Row className="justify-content-center">
     <Col lg={8} className="practicecard shadow py-2 my-4 md-3">
 
       <Tab.Container id="practice-tabs" defaultActiveKey="tab1">
