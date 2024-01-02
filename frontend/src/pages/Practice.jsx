@@ -329,18 +329,20 @@ return (
               <h5 className="displlay-3"style={{FontWeight:'bold'}}>
               {/* {isFetchingQuestion && <div>{aiQuestion}</div>} */}
               {!isFetchingQuestion && currentQuestion.question && 
-                <QuestionDisplay question={currentQuestion.question} ttsService={ttsService} />
-              }
+                <><QuestionDisplay question={currentQuestion.question} ttsService={ttsService} />
+                <Button variant="outline-success" id="round-btn" size="lg"className="btn-icon-only shaking-btn"
+                onClick={handleToggleHint} 
+                aria-controls="hint-collapse" 
+                aria-expanded={open}
+              >
+                <i class="fa-regular fa-lightbulb"></i>
+              </Button></>
+              }              
+              </h5>
+
               {/* {isFetchingQuestion ? <div>{aiQuestion}</div> : <QuestionDisplay question={currentQuestion.question} ttsService={ttsService} />} */}
               {/* {isQuestionGenerated && renderQuestion()} */}
 
-              <Button variant="outline-success" id="round-btn" size="lg"className="btn-icon-only shaking-btn"
-              onClick={handleToggleHint} 
-              aria-controls="hint-collapse" 
-              aria-expanded={open}
-            >
-              <i class="fa-regular fa-lightbulb"></i>
-            </Button></h5>
           </Col>
           {currentQuestion.question && (
 
