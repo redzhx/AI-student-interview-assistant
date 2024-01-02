@@ -3,7 +3,7 @@ import React, { useState,useEffect } from 'react';
 import axios from 'axios';
 import { useSettings } from './SettingsContext';
 
-import {Card } from 'react-bootstrap';
+import {Card,Button } from 'react-bootstrap';
 
 function GenerateSection({ currentQuestion, answer, onEvaluationGenerated ,resetKey,disabled}) {
     const { aiChoice } = useSettings();
@@ -84,23 +84,24 @@ function GenerateSection({ currentQuestion, answer, onEvaluationGenerated ,reset
     
 
     return (
-        <div id="judgearea" className='mb-3'>
-            <Card>
-                <Card.Header id="judgeareah" variant="primary" className="mb-1 py-2 text-center"
-                    onClick={!evaluation ? generateEvaluation : null} // 仅在没有评价时才能点击
-                    disabled={!answer || isLoading || disabled || evaluation} // 如果没有答案、正在加载、已禁用或已生成评价，则禁用按钮
-                    title={!answer ? "请先输入答案" : ""}
-                >
-                    <h6 className='text-primary mt-2'><i class="fa-solid fa-robot"></i> 评价</h6>
-                </Card.Header> 
-                <Card.Body>
-                    <Card.Text style={{ whiteSpace: 'pre-line', textAlign: 'left' }}>
-                        {answer} <br/>
-                        {evaluation}
-                    </Card.Text>
-                </Card.Body>
-            </Card>
-        </div>
+        <>
+       
+        <Card>
+            <Card.Body>
+                <Card.Text style={{ whiteSpace: 'pre-line', textAlign: 'left' }}>
+                    回答：{answer} <br/>
+                    {evaluation}
+                </Card.Text>
+            </Card.Body>
+        </Card>
+        <Button id="judgeareah" variant="primary" className="mt-2 py-2 text-center"
+            onClick={!evaluation ? generateEvaluation : null} // 仅在没有评价时才能点击
+            disabled={!answer || isLoading || disabled || evaluation} // 如果没有答案、正在加载、已禁用或已生成评价，则禁用按钮
+            title={!answer ? "请先输入答案" : ""}
+        >
+            <i class="fa-solid fa-robot"></i> 评价
+        </Button> 
+        </>
     );
 }
 export default GenerateSection;

@@ -5,7 +5,7 @@ import QuestionDisplay from '../components/QuestionDisplay';
 import AnswerSection from '../components/AnswerSection-0';
 import GenerateSection from '../components/GenerateSection';
 import { useSettings } from '../components/SettingsContext';
-import { Container,Row,Button, Card,Col,Collapse } from 'react-bootstrap'; // 确保这一行存在于文件顶部
+import { Container,Row,Button, Card,Col,Collapse,Tab,Nav } from 'react-bootstrap'; // 确保这一行存在于文件顶部
 import PracticeEndModal from '../components/PracticeEndModal';
 import ControlPanel from '../components/ControlPanel'; // 确保正确导入 ControlPanel 组件
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -32,6 +32,7 @@ function Practice() {
   // const [loadingHint, setLoadingHint] = useState(false);
   const { ttsService } = useSettings(); // 从 SettingsContext 获取 TTS 配置
   const [showControlPanel, setShowControlPanel] = useState(false);
+  const [activeTab, setActiveTab] = useState('tab1');
 
 
   const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
@@ -39,21 +40,25 @@ function Practice() {
   const handleModeSelection = (selectedMode) => {
     setMode(selectedMode);
     setShowCustomQuestionInput(selectedMode === 'custom'); // 当选择自定义模式时显示输入框
+    resetContent(); // 重置所有与答题相关的内容
+    setIsQuestionGenerated(false); // 重置问题生成状态
+    setCurrentQuestion({}); // 清空当前问题
+
 
     // 根据选择的模式进行相应操作...
   };
 
 
   const resetContent = () => {
-    setCurrentQuestion('');
+    // setCurrentQuestion({});
     setCustomQuestion(''); // 重置自定义题目
     setAnswer('');
     setEvaluation('');
     setIsEvaluationGenerated(false);
-    // setQuestionCount(0); // 根据需要调整
+    // setIsQuestionGenerated(false); // 标记题目未生成
+    setQuestionCount(0); // 根据需要调整
     setHint('');
-    // setResetKey(prev => prev + 1); // 更新重置键
-    setIsQuestionGenerated(false); // 标记题目未生成
+    setResetKey(prev => prev + 1); // 更新重置键
 
     // 其他需要重置的状态...
   };
@@ -63,10 +68,12 @@ function Practice() {
     resetContent();
     switch (mode) {
       case 'random':
-        await fetchAndPlayQuestion();
+        await fetchRandomQuestion();
+        setIsQuestionGenerated(true);
         break;
       case 'ai':
-        // TODO: 调用AI出题API
+         fetchAIQuestion();
+        // setIsQuestionGenerated(true);
         break;
       case 'custom':
         setShowCustomQuestionInput(true); // 在自定义模式下重新显示输入框
@@ -87,7 +94,7 @@ function Practice() {
   };
 
   const submitCustomQuestion = () => {
-    const questionWithSymbol = customQuestion + " ☆"; // 在题目后面加上符号
+    const questionWithSymbol = "🦁 "+customQuestion; // 在题目后面加上符号
     setCurrentQuestion({ question: questionWithSymbol });
 
     setIsQuestionGenerated(true); // 标记题目已生成
@@ -100,8 +107,6 @@ function Practice() {
   const renderQuestion = () => {
     return (
       <div>
-        {/* <QuestionDisplay question={currentQuestion.question} /> */}
-        {/* <span>来源: {currentQuestion.source}</span> */}
       </div>
     );
   };
@@ -114,7 +119,7 @@ function Practice() {
           title = '随机出题';
           break;
         case 'ai':
-          title = 'AI出题（开发中）';
+          title = 'AI出题';
           break;
         case 'custom':
           title = '自己出题';
@@ -127,7 +132,7 @@ function Practice() {
     };
 
     // 获取问题的函数
-    const fetchAndPlayQuestion = async () => {
+    const fetchRandomQuestion = async () => {
       try {
           const response = await axios.get(`${apiUrl}/api/get-question`);
           if (response.data) {
@@ -151,6 +156,40 @@ function Practice() {
       
 
   };
+
+
+// 定义从AI获取题目的函数
+const fetchAIQuestion = async () => {
+  try {
+    const response = await fetch(`${apiUrl}/api/ai-question`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ ai: aiChoice }) // 确保传递正确的AI选项
+    });
+
+    const reader = response.body.getReader();
+    let questionStream = '';
+
+    // 处理流数据
+    reader.read().then(function processStream({ done, value }) {
+      if (done) {
+        setCurrentQuestion({ question: questionStream });
+        setIsQuestionGenerated(true);
+        return;
+      }
+
+      const chunk = new TextDecoder("utf-8").decode(value);
+      questionStream += chunk;
+
+      return reader.read().then(processStream);
+    });
+
+  } catch (error) {
+    console.error('Error fetching AI generated question:', error);
+  }
+};
 
 // 定义生成提示的函数
 const generateHint = async (question) => {
@@ -219,144 +258,173 @@ const endPractice = () => {
   setShowEndModal(true);
 };
 
+
+const handleTabChange = (tabKey) => {
+  setActiveTab(tabKey);
+};
+
+
 return (
-  <Container container-lg className=" col-md-8 py-4 my-4">
-         {renderTitle()}  {/* 显示当前模式的标题 */}
-
-    <Row>
-    <Col  className="mt-2 ">
+  <Container  className="py-4 my-4">
+    {renderTitle()}  {/* 显示当前模式的标题 */}
+    {/* 控制面板按钮 */}    
+    <div  className="mt-2 ">
         <Button
-                id="controlbtn" 
-                className="  shaking-btn outline-primary"
-                onClick={() => setShowControlPanel(true)}
-              >
-              <i class="fa-solid fa-robot"></i>     
-              </Button> 
-      </Col>
-      <Col md="8" className="my-3">
-     {/* 出题和答题界面 */}
-      {/* 用户自定义题目输入 */}
-      {mode === 'custom' && showCustomQuestionInput && (
-        <div>
-          <input  className="me-3 border-0 bg-secondary" type="text"       
-          placeholder="输入你自己的题目"
-        value={customQuestion} onChange={handleCustomQuestionChange} />
-          <Button variant="success" size="sm" onClick={submitCustomQuestion}>提交</Button>
+          id="controlbtn" 
+          className="  shaking-btn outline-primary"
+          onClick={() => setShowControlPanel(true)}
+        >
+        <i class="fa-solid fa-robot"></i>     
+        </Button> 
+    </div>
+    <Row className=" justify-content-center">
+      <Col lg={8} className="practicecard shadow my-4">
+        {/* 自定义题目 */}
+        <div   className="my-3">
+          {/* 出题和答题界面 */}
+            {/* 用户自定义题目输入 */}
+            {mode === 'custom' && showCustomQuestionInput && (
+              <div>
+                <input  className="me-3 border-0 bg-secondary" type="text"       
+                placeholder="输入你自己的题目"
+              value={customQuestion} onChange={handleCustomQuestionChange} />
+                <Button variant="success" size="sm" onClick={submitCustomQuestion}>提交</Button>
+              </div>
+            )}
+              {isQuestionGenerated && renderQuestion()}
         </div>
-      )}
-        {isQuestionGenerated && renderQuestion()}
-   </Col>
-    </Row>
-    <Row id="practicecard" className="shadow mb-4">
-    
-      <Row className="mb-3 d-flex justify-content-center">
-      
-      {!isQuestionGenerated && (
-        <Col  className="text-center">
-          <br/>
-          <br/>
-          <br/>
-          <Button variant="outline-primary" size="lg" onClick={startPractice} className="">
-            开始答题
-        </Button>
-        </Col>
-        )}
-      </Row>
-    {currentQuestion.question && (
-      <>
-        <Row className='my-3 '>
-            <Col md={12} className="mb-3">
-                <h5 className="displlay-3"style={{FontWeight:'bold'}}>
-               
-                <QuestionDisplay question={currentQuestion.question} ttsService={ttsService} />
-                <Button variant="outline-success" id="round-btn" size="lg"className="btn-icon-only shaking-btn"
-                onClick={handleToggleHint} 
-                aria-controls="hint-collapse" 
-                aria-expanded={open}
-              >
-                <i class="fa-regular fa-lightbulb"></i>
-              </Button></h5>
-            </Col>
-        </Row>
-        
-<Row>
-    <Col md={12} className="mb-4">
-        <Collapse in={open}>
-            <div id="hint-collapse">
-                <Card id="hint">
-                    <Card.Body>
-                        <Card.Text style={{ whiteSpace: 'pre-line', textAlign: 'left' }}>
-                           💡提示: {hint}
-                        </Card.Text>
-                        <Button 
-                            id="round-btn"
-                            variant="outline-success" 
-                            size="sm" 
-                            onClick={handleToggleHint}
-                        >
-                            <i class="fa-solid fa-angles-up"></i>
-                        </Button>
-                    </Card.Body>
-                </Card>
-            </div>
-        </Collapse>
-    </Col>
-</Row>  
-        {!isEvaluationGenerated && (
-        <Row>
+        {/* 进入开始 */}
+        <div  className=" mb-3 d-flex justify-content-center">
+            {!isQuestionGenerated && (
+              <Col  className="text-center">
+                
+                <Button variant="outline-primary" size="lg" onClick={startPractice} className="">
+                  开始答题
+              </Button>
+              </Col>
+              )}
+        </div>
+        {/* 显示问题和提示 */}
+      {currentQuestion.question && (
+        <>
           <Col md={12} className="mb-3">
-            {/* <Card>
-              <Card.Body> */}
-                 <AnswerSection 
-                  onAnswerSubmit={handleAnswerSubmit} 
-                  key={resetKey} // 使用 key 来重置组件状态
-                  disabled={isEvaluationGenerated}
-                  /> 
-              {/* </Card.Body>
-            </Card> */}
+              <h5 className="displlay-3"style={{FontWeight:'bold'}}>
+            
+              <QuestionDisplay question={currentQuestion.question} ttsService={ttsService} />
+              <Button variant="outline-success" id="round-btn" size="lg"className="btn-icon-only shaking-btn"
+              onClick={handleToggleHint} 
+              aria-controls="hint-collapse" 
+              aria-expanded={open}
+            >
+              <i class="fa-regular fa-lightbulb"></i>
+            </Button></h5>
           </Col>
-        </Row>
-        )}
-      </>
-    )}
-    {isQuestionGenerated && (
-      <Row>
-        <Col md={12} className="mt-3">
-            <GenerateSection 
-              currentQuestion={currentQuestion}
-              answer={answer} 
-              onEvaluationGenerated={handleEvaluationGenerated} 
-              // aiChoice={aiChoice} 
-              disabled={!answer}
-              resetKey={resetKey} // 传递重置键作为重置信号
+          <Col md={12} className="mb-4">
+              <Collapse in={open}>
+                  <div id="hint-collapse">
+                      <Card id="hint">
+                          <Card.Body>
+                              <Card.Text style={{ whiteSpace: 'pre-line', textAlign: 'left' }}>
+                                💡提示: {hint}
+                              </Card.Text>
+                              <Button 
+                                  id="round-btn"
+                                  variant="outline-success" 
+                                  size="sm" 
+                                  onClick={handleToggleHint}
+                              >
+                                  <i class="fa-solid fa-angles-up"></i>
+                              </Button>
+                          </Card.Body>
+                      </Card>
+                  </div>
+              </Collapse>
+          </Col>
+          
+        
+            
+          
+        </>
+      )}
+      </Col>
+    </Row>
 
+    {isQuestionGenerated && (    
+    <Row>
+    <Col lg={8} className="practicecard shadow py-2 my-4 md-3">
 
-              // disabled={!answer || isEvaluationGenerated}
-            />              
-        </Col>
+      <Tab.Container id="practice-tabs" defaultActiveKey="tab1">
+        <Nav variant="tabs">
+          <Nav.Item>
+            <Nav.Link eventKey="tab1">回答</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link 
+            eventKey="tab2"
+            className={answer ? "bouncing-tab" : ""}
+            style={{ color: answer ? '' : '' }}
+            >评价</Nav.Link>
+          </Nav.Item>
+        </Nav>
+        <Tab.Content>
+          <Tab.Pane eventKey="tab1">
+              {currentQuestion.question && (
+                <AnswerSection 
+                onAnswerSubmit={handleAnswerSubmit} 
+                key={resetKey} // 使用 key 来重置组件状态
+                disabled={isEvaluationGenerated}
+              /> 
+              )}               
+          </Tab.Pane>
+          <Tab.Pane eventKey="tab2">
+            <Row>
+              {currentQuestion.question && (
+                <Col lg={8} className="my-1 ">
+                {isQuestionGenerated && (
+                
+                    <div  className="my-3">
+                        <GenerateSection 
+                          currentQuestion={currentQuestion}
+                          answer={answer} 
+                          onEvaluationGenerated={handleEvaluationGenerated} 
+                          // aiChoice={aiChoice} 
+                          disabled={!answer}
+                          resetKey={resetKey} // 传递重置键作为重置信号
+                          // disabled={!answer || isEvaluationGenerated}
+                        />              
+                    </div>
 
+                )}     
+                </Col>    
+                )}
+            </Row>
+          </Tab.Pane>
+        </Tab.Content>
+        </Tab.Container>
+ 
+      </Col>
       </Row>
-    )}     
-    </Row>      
-    {isQuestionGenerated && (
-      <Row>
-        <Col md={12} className="mt-3 d-flex justify-content-end">
-        <Button variant="outline-primary" onClick={startPractice} className="mr-2 btn-icon-only">
-          <i class="fa-solid fa-circle-chevron-right"></i>
-          </Button>
-          <Button  variant="outline-dark" className="btn-icon-only" onClick={endPractice}><i class="fa-solid fa-right-from-bracket"></i></Button>
-          </Col>
-        </Row>)
-    }
-    <PracticeEndModal 
-      show={showEndModal} 
-      onHide={() => setShowEndModal(false)} 
-      questionCount={questionCount}
-    />
-    {/* 控制面板的显示 */}
+         )}
+      {/* 控制组件继续或离开按钮 */}
+      {isQuestionGenerated && (
+        
+          <Col md={12} className="mt-3 d-flex justify-content-end">
+          <Button variant="outline-primary" onClick={startPractice} className="mr-2 btn-icon-only">
+            <i class="fa-solid fa-circle-chevron-right"></i>
+            </Button>
+            <Button  variant="outline-dark" className="btn-icon-only" onClick={endPractice}><i class="fa-solid fa-right-from-bracket"></i></Button>
+            </Col>
+          )
+      }
+      <PracticeEndModal 
+        show={showEndModal} 
+        onHide={() => setShowEndModal(false)} 
+        questionCount={questionCount}
+      />
+      {/* 控制面板的显示 */}
 
-    <ControlPanel show={showControlPanel} onHide={() => setShowControlPanel(false)} setMode={handleModeSelection}  />
-    </Container>
+      <ControlPanel show={showControlPanel} onHide={() => setShowControlPanel(false)} setMode={handleModeSelection}  />
+</Container>
 
 );
 }

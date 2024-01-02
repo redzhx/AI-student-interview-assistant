@@ -151,6 +151,27 @@ async def generate_hint(item: Item):
 
     return StreamingResponse(stream())
 
+
+
+@app.post('/api/ai-question')
+async def ai_question(item: Item):
+    # 这里可以根据需要定制AI生成题目的逻辑
+    ai_prompt = """
+    你是中考自主招生考试面试环节的出题人，你很了解从哪些方面来评估学生的综合素质和潜力。
+    面试环节考察的方向有且不限于：初中学生的综合素养、思维能力、解决问题的能力、团队合作和领导能力、对时事的见解、兴趣爱好等等。 请随机从以上考场方向给学生出一道面试题目。请在题目内容前面加🤖 。"
+
+    """
+
+    if item.ai == 'zhipuai':
+        stream = call_zhipuai(ai_prompt)
+    elif item.ai == 'openai':
+        stream = openai_services.call_openai(ai_prompt)
+    else:
+        raise HTTPException(status_code=400, detail="Invalid AI option")
+
+    return StreamingResponse(stream())
+
+
 # 创建新的数据 ok
 @app.post("/api/create", response_model=schemas.Record)
 def create_record(

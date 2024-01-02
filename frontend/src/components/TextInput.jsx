@@ -16,7 +16,7 @@ function TextInput({ onTextSubmit,  }) {
       value={input}
       onChange={e => setInput(e.target.value)}
       className="form-control"
-      rows="6" // 设置文本区域的行数，根据需要调整
+      rows="3" // 设置文本区域的行数，根据需要调整
       placeholder="输入回答"
       />
  </div>

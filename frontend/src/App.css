@@ -49,30 +49,18 @@ body {
   color: #525f7f;
 
 }
-#answerarea, #judgearea{
-  background-color: #f0f2fc;
-  border-radius: 5px;
-}
 
-#answerarea1{
-  background-color: #fcfbff;
-}
 
 #hint{
   background-color:  #f6f8f8
-  
- 
 }
 
-#practicecard{
-  min-height: 200px;
+.practicecard{
+  min-height: 70px;
   border-radius: 25px;
   padding-left: 15px;
 }
 
-button {
-  margin-right: 10px; /* 设置按钮右侧的间距 */
-}
 
 .inputbtn {
   width:70px;
@@ -184,6 +172,8 @@ button {
 
 
 /* animation */
+
+
 @keyframes bounce {
   0%, 20%, 50%, 80%, 100% {
     transform: translateY(0);
@@ -207,7 +197,9 @@ button {
   75% { transform: translateY(-1px) rotate(0.5deg); }
   100% { transform: translateY(0); }
 }
-
+.bouncing-tab {
+  animation: bounce 2s ;
+}
 .shaking-btn {
   animation: shake 3s ease-in-out infinite;
 }
@@ -242,4 +234,12 @@ button {
   margin-left: 10px;
   margin-top: 12px;
   color: #ccc;
+}
+
+.nav-link.active {
+  color: rgb(255, 0, 119);
+}
+
+.tab-with-answer {
+  background-color: #ebf0ff
 }

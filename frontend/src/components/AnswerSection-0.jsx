@@ -127,59 +127,49 @@ function AnswerSection({ onAnswerSubmit,disabled}) {
     }, [countdown, isRecording, stopRecording]);
 
     return (
-        <div id="answerarea" className='py-2'>
-           {isRecordingMode&&(<Card className="my-1 border-1" >
-            {/* <Card.Header className="mb-2">回答</Card.Header> */}
-            <Card.Body id="answerarea1" className="">
-               
-                <Card.Text style={{ whiteSpace: 'pre-line', textAlign: '' }}>
-                <p><strong className="text-light">⏰ {formatTime(countdown)}</strong><br/>
-                    {loading && (
-                    <Spinner animation="border" variant="primary" role="status">
-                    <span className="sr-only">Loading...</span>
-                    </Spinner>
-                )}</p>
-                {transcript && <p>🎙️  {transcript}</p>}
+        <>
+        <div  className="mb-4 py-3">
+        {isRecordingMode&&(
+           <div className="my-2 " >
+                <div><h5 className="text-light"> {formatTime(countdown)}</h5></div>
+
                 {error && <p>Error: {error}</p>}
-                <br/>
-                {audioUrl && <audio src={audioUrl} controls />}<br/>
-                <Button variant="danger" 
+                <div>{audioUrl && <audio src={audioUrl} controls />}</div>
+                {loading && (
+                    <div>
+                    <Spinner animation="border" variant="light" role="status">
+                    <span className="sr-only">Loading...</span>
+                    </Spinner></div>
+                )}
+                <div>{transcript && <p>  {transcript}</p>}</div>
+
+                           
+
+        </div>)}
+        
+            <div md="12">
+            {!isRecordingMode && <TextInput onTextSubmit={onAnswerSubmit} disabled={isRecording} />}
+            </div>
+            <div className=" align-items-center">
+                <div>
+                    <Button variant="white"  className=" btn-icon-only mr-4" size="" onClick={toggleAnswerMode} disabled={disabled}>
+                        <i className={isRecordingMode ? 'fa-solid fa-keyboard' : 'fa-solid fa-xmark'}> <Badge bg="" className="text-light"></Badge> </i>
+                        {isRecordingMode ? ' ' : ' '}
+                    </Button>
+                    <Button variant="danger" 
                     className=" btn-icon-only record-btn shadow my-1"
                     onClick={isRecording ? stopRecording : startRecording}
                     disabled={isRecording && countdown === 0}
                     >
                     <i className={`fa-${isRecording ? 'regular fa-circle-stop' : 'solid fa-microphone'} fa-lg`}></i>
                     </Button>
-                </Card.Text>
-            </Card.Body>
-        </Card>)}
-
-        <Row>        
-            <Col md="12">
-            {!isRecordingMode && <TextInput onTextSubmit={onAnswerSubmit} disabled={isRecording} />}
-            </Col>
-            <Col className=" align-items-center">
-            <Button variant=""  className="btn-icon inputbtn" size="sm" onClick={toggleAnswerMode} disabled={disabled}>
-                <i className={isRecordingMode ? 'fa-solid fa-keyboard' : 'fa-solid fa-xmark'}> <Badge bg="" className="text-light">输入</Badge> </i>
-                {isRecordingMode ? ' ' : ' '}
-            </Button>
-            </Col>
-            {/* <Col className="align-items-right">
-            {!isRecordingMode && (<TextInput onTextSubmit={onAnswerSubmit} disabled={isRecording} />)}
-            <Button variant="secondary" className="" size='sm' onClick={toggleAnswerMode} disabled={disabled}>
-                <i className={isRecordingMode ? 'fa-solid fa-keyboard' : 'fa-solid fa-xmark'}></i>
-                {isRecordingMode ? ' ' : ' '}
-            </Button> */}
-            {/* {isRecordingMode && (<Button variant="danger"
-            className=" my-1"
-            onClick={isRecording ? stopRecording : startRecording}
-            disabled={isRecording && countdown === 0}
-            >
-            <i className={`fa-${isRecording ? 'regular fa-circle-stop' : 'solid fa-microphone'} fa-lg`}></i>
-            </Button>)} */}
-            {/* </Col> */}
-        </Row>
+                        
+                </div>   
+            </div>
         </div>
+
+        
+    </>
       );
 }
 export default AnswerSection;
