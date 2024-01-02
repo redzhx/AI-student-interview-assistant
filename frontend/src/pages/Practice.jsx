@@ -126,7 +126,7 @@ function Practice() {
           break;
         // ... 可以添加更多模式的处理 ...
         default:
-          title = '更多模式开发中';
+          title = '更多模式开发中）';
       }
       return <h5 className="text-center">{title}</h5>;
     };
@@ -375,7 +375,7 @@ return (
           <Tab.Pane eventKey="tab2">
             <Row>
               {currentQuestion.question && (
-                <Col lg={8} className="my-1 ">
+                <Col className="my-1 ">
                 {isQuestionGenerated && (
                 
                     <div  className="my-3">
