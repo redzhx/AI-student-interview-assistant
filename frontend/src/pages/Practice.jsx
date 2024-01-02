@@ -17,7 +17,7 @@ function Practice() {
   const [showCustomQuestionInput, setShowCustomQuestionInput] = useState(false); // 新增状态
 
   const [currentQuestion, setCurrentQuestion] = useState({});
-  const [showModeSelection, setShowModeSelection] = useState(true); // 新增状态用于控制是否显示模式选择界面
+  // const [showModeSelection, setShowModeSelection] = useState(true); // 新增状态用于控制是否显示模式选择界面
 
   const [answer, setAnswer] = useState(''); // 用户的回答
   const [evaluation, setEvaluation] = useState('');
@@ -32,8 +32,9 @@ function Practice() {
   // const [loadingHint, setLoadingHint] = useState(false);
   const { ttsService } = useSettings(); // 从 SettingsContext 获取 TTS 配置
   const [showControlPanel, setShowControlPanel] = useState(false);
-  const [activeTab, setActiveTab] = useState('tab1');
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [aiQuestion, setAiQuestion] = useState('');
+  const [isFetchingQuestion, setIsFetchingQuestion] = useState(false);
 
   const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
   
@@ -56,7 +57,6 @@ function Practice() {
     setEvaluation('');
     setIsEvaluationGenerated(false);
     // setIsQuestionGenerated(false); // 标记题目未生成
-    setQuestionCount(0); // 根据需要调整
     setHint('');
     setResetKey(prev => prev + 1); // 更新重置键
 
@@ -66,25 +66,33 @@ function Practice() {
   // 统一的开始答题函数
   const startPractice = async () => {
     resetContent();
-    switch (mode) {
-      case 'random':
-        await fetchRandomQuestion();
-        setIsQuestionGenerated(true);
-        break;
-      case 'ai':
-         fetchAIQuestion();
-        // setIsQuestionGenerated(true);
-        break;
-      case 'custom':
-        setShowCustomQuestionInput(true); // 在自定义模式下重新显示输入框
-        setCurrentQuestion({ question: customQuestion, source: '用户自定义' });
-        setIsQuestionGenerated(true);
-        setCustomQuestion(''); // 重置自定义题目
+    setIsLoading(true); // 开始加载
+    try {
 
-        break;
-      default:
-        console.error('未知的出题模式');
+      switch (mode) {
+        case 'random':
+          await fetchRandomQuestion();
+          setIsQuestionGenerated(true);
+          break;
+        case 'ai':
+          fetchAIQuestion();
+          // setIsQuestionGenerated(true);
+          break;
+        case 'custom':
+          setShowCustomQuestionInput(true); // 在自定义模式下重新显示输入框
+          setCurrentQuestion({ question: customQuestion, source: '用户自定义' });
+          setIsQuestionGenerated(true);
+          setCustomQuestion(''); // 重置自定义题目
+
+          break;
+        default:
+          console.error('未知的出题模式');
+      }
+    } finally {
+      setIsLoading(false); // 加载完成
     }
+    setIsQuestionGenerated(true);
+
   };
 
 
@@ -160,13 +168,15 @@ function Practice() {
 
 // 定义从AI获取题目的函数
 const fetchAIQuestion = async () => {
+  setIsFetchingQuestion(true);
+  setAiQuestion(""); // 初始化AI问题为空
   try {
     const response = await fetch(`${apiUrl}/api/ai-question`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ ai: aiChoice }) // 确保传递正确的AI选项
+      body: JSON.stringify({ ai: aiChoice })
     });
 
     const reader = response.body.getReader();
@@ -175,21 +185,24 @@ const fetchAIQuestion = async () => {
     // 处理流数据
     reader.read().then(function processStream({ done, value }) {
       if (done) {
-        setCurrentQuestion({ question: questionStream });
-        setIsQuestionGenerated(true);
+        setCurrentQuestion({ question: questionStream }); // 当数据流完成时，设置完整的问题
+        setIsFetchingQuestion(false);
         return;
       }
 
       const chunk = new TextDecoder("utf-8").decode(value);
       questionStream += chunk;
+      setAiQuestion(questionStream); // 实时更新问题文本
 
       return reader.read().then(processStream);
     });
 
   } catch (error) {
     console.error('Error fetching AI generated question:', error);
+    setIsFetchingQuestion(false);
   }
 };
+
 
 // 定义生成提示的函数
 const generateHint = async (question) => {
@@ -250,19 +263,15 @@ const generateHint = async (question) => {
   const handleEvaluationGenerated = (generatedEvaluation) => {
     setEvaluation(generatedEvaluation); // 更新评价状态
     setIsEvaluationGenerated(true); // 设置生成评价后的状态
-    setQuestionCount(questionCount + 1); // 递增答题计数器
+    // setQuestionCount(questionCount + 1); // 递增答题计数器
+    setQuestionCount(prevCount => prevCount + 1); // 正确地递增计数器
+
   };
 
 
 const endPractice = () => {
   setShowEndModal(true);
 };
-
-
-const handleTabChange = (tabKey) => {
-  setActiveTab(tabKey);
-};
-
 
 return (
   <Container  className="py-4 my-4 ">
@@ -292,25 +301,31 @@ return (
               </div>
             )}
               {isQuestionGenerated && renderQuestion()}
+             
+
         </div>
         {/* 进入开始 */}
         <div  className=" mb-3 d-flex justify-content-center">
             {!isQuestionGenerated && (
               <Col  className="text-center">
                 
-                <Button variant="outline-primary" size="lg" onClick={startPractice} className="">
+                <Button variant="outline-primary" size="lg" onClick={startPractice} disabled={isLoading}>
                   开始答题
               </Button>
+              {isLoading && <div className="mt-2">Loading...</div>} {/* 加载指示器 */}
               </Col>
               )}
         </div>
         {/* 显示问题和提示 */}
+        {isLoading && <div className="mt-2">Loading...</div>} {/* 加载指示器 */}
+
       {currentQuestion.question && (
         <>
           <Col md={12} className="mb-3">
               <h5 className="displlay-3"style={{FontWeight:'bold'}}>
             
-              <QuestionDisplay question={currentQuestion.question} ttsService={ttsService} />
+              {isFetchingQuestion ? <div>{aiQuestion}</div> : <QuestionDisplay question={currentQuestion.question} ttsService={ttsService} />}
+
               <Button variant="outline-success" id="round-btn" size="lg"className="btn-icon-only shaking-btn"
               onClick={handleToggleHint} 
               aria-controls="hint-collapse" 
@@ -383,7 +398,6 @@ return (
                           currentQuestion={currentQuestion}
                           answer={answer} 
                           onEvaluationGenerated={handleEvaluationGenerated} 
-                          // aiChoice={aiChoice} 
                           disabled={!answer}
                           resetKey={resetKey} // 传递重置键作为重置信号
                           // disabled={!answer || isEvaluationGenerated}

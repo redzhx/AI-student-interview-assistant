@@ -14,7 +14,7 @@ function PracticeEndModal({ show, onHide, questionCount }) {
       <Modal.Body>
       <div><img src="/interest-fre-header.png" alt="congrats" className="img-fluid mt-4" /></div>
 
-        <div className='text-center my-4'><strong >🎉🎉太棒啦！你完成了 {questionCount} 道题目！</strong>
+        <div className='text-center my-4'><strong >🎉🎉恭喜你，又完成了 {questionCount} 道题目！</strong>
         <p  className='my-3'> 每一次的模拟，都是你征服梦想的小小演练。继续前进吧，你的未来一定充满无限可能！🚀📖💫💪🎊</p>
         <Button variant="primary" onClick={() => navigate('/')}>
           回到首页
