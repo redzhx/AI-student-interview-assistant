@@ -77,8 +77,8 @@ function ControlPanel({ show, onHide,setMode }) {
               <Button variant="warning" size="sm"className="my-3" onClick={() => setMode('ai')}>
                 AI出题
               </Button>
-              <Button variant="danger"  size="sm" className="my-3"  onClick={() => setMode('library')}>
-                查看题库
+              <Button variant="light"  size="sm" className="my-3"  onClick={() => setMode('library')}>
+                查看题库(todo)
               </Button><br/>
             </div>
         </Form>

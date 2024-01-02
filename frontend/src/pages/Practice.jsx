@@ -116,19 +116,19 @@ function Practice() {
       let title = '';
       switch (mode) {
         case 'random':
-          title = '随机出题';
+          title = '历年真题随机练';
           break;
         case 'ai':
-          title = 'AI出题';
+          title = 'AI出题试试手气';
           break;
         case 'custom':
-          title = '自己出题';
+          title = '自己出题是高手';
           break;
         // ... 可以添加更多模式的处理 ...
         default:
-          title = '选择出题模式（开发中）';
+          title = '更多模式开发中';
       }
-      return <h2 className="text-center">{title}</h2>;
+      return <h5 className="text-center">{title}</h5>;
     };
 
     // 获取问题的函数
