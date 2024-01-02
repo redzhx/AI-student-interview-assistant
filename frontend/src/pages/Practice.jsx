@@ -312,12 +312,11 @@ return (
                 <Button variant="outline-primary" size="lg" onClick={startPractice} disabled={isLoading}>
                   开始答题
               </Button>
-              {isLoading && <div className="mt-2">Loading...</div>} {/* 加载指示器 */}
               </Col>
               )}
         </div>
         {/* 显示问题和提示 */}
-        {isLoading && <div className="mt-2">Loading...</div>} {/* 加载指示器 */}
+        {/* {isLoading && <div className="mt-2">Loading...</div>} 加载指示器 */}
 
       {currentQuestion.question && (
         <>
