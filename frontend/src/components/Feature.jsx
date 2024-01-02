@@ -49,9 +49,9 @@ const FeatureSection = () => {
         </div>
       </div>
       <div className="row justify-content-center py-md-5">
-        <div className="col-12 col-lg-8 text-center">
-          <h2 className="h1 mt-5 mb-5">助你面试无畏，成就未来之星！</h2>
-          <p>无论是准备自招面试，还是日常练习思辨能力，面小狮都是你的理想助手。让面小狮陪你一同开启升学之旅，成就未来的梦想！</p>
+        <div className="col-12 col-lg-8 pl-3 text-center">
+          <h3 className="h1 mt-5 mb-5">助你面试无畏，成就未来之星！</h3>
+          <div className='me-4'>无论是准备自招面试，还是日常练习思辨能力，面小狮都是你的理想助手。让面小狮陪你一同开启升学之旅，成就未来的梦想！</div>
         </div>
       </div>
     </div>

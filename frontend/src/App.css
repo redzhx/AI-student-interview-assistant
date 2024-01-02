@@ -236,10 +236,6 @@ body {
   color: #ccc;
 }
 
-.nav-link.active {
-  color: rgb(255, 0, 119);
-}
-
 .tab-with-answer {
   background-color: #ebf0ff
 }
