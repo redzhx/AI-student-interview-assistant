@@ -113,10 +113,15 @@ function Practice() {
 
   // 根据题目来源渲染题目显示
   const renderQuestion = () => {
-    return (
-      <div>
-      </div>
-    );
+    if (isFetchingQuestion) {
+      // 当 AI 问题正在被流式获取时
+      return <div>{aiQuestion}</div>;
+    } else if (currentQuestion && currentQuestion.question) {
+      // 当 AI 问题已经完全接收且存储在 currentQuestion 中时
+      return <QuestionDisplay question={currentQuestion.question} ttsService={ttsService} />;
+    }
+    // 当没有问题时显示空白
+    return null;
   };
 
     // 根据模式渲染标题
@@ -187,6 +192,8 @@ const fetchAIQuestion = async () => {
       if (done) {
         setCurrentQuestion({ question: questionStream }); // 当数据流完成时，设置完整的问题
         setIsFetchingQuestion(false);
+        setAiQuestion(""); // 清空 AI 问题缓存
+
         return;
       }
 
@@ -300,7 +307,6 @@ return (
                 <Button variant="success" size="sm" onClick={submitCustomQuestion}>提交</Button>
               </div>
             )}
-              {isQuestionGenerated && renderQuestion()}
              
 
         </div>
@@ -316,14 +322,17 @@ return (
               )}
         </div>
         {/* 显示问题和提示 */}
-        {/* {isLoading && <div className="mt-2">Loading...</div>} 加载指示器 */}
 
-      {currentQuestion.question && (
         <>
           <Col md={12} className="mb-3">
+             {isFetchingQuestion && <div className="mt-2">Loading...</div>} 
               <h5 className="displlay-3"style={{FontWeight:'bold'}}>
-            
-              {isFetchingQuestion ? <div>{aiQuestion}</div> : <QuestionDisplay question={currentQuestion.question} ttsService={ttsService} />}
+              {/* {isFetchingQuestion && <div>{aiQuestion}</div>} */}
+              {!isFetchingQuestion && currentQuestion.question && 
+                <QuestionDisplay question={currentQuestion.question} ttsService={ttsService} />
+              }
+              {/* {isFetchingQuestion ? <div>{aiQuestion}</div> : <QuestionDisplay question={currentQuestion.question} ttsService={ttsService} />} */}
+              {/* {isQuestionGenerated && renderQuestion()} */}
 
               <Button variant="outline-success" id="round-btn" size="lg"className="btn-icon-only shaking-btn"
               onClick={handleToggleHint} 
@@ -333,6 +342,8 @@ return (
               <i class="fa-regular fa-lightbulb"></i>
             </Button></h5>
           </Col>
+          {currentQuestion.question && (
+
           <Col md={12} className="mb-4">
               <Collapse in={open}>
                   <div id="hint-collapse">
@@ -353,9 +364,9 @@ return (
                       </Card>
                   </div>
               </Collapse>
-          </Col>
+          </Col>      )}
+
         </>
-      )}
       </Col>
     </Row>
 
