@@ -36,7 +36,7 @@ def delete_record(db: Session, id: int):
     return { "ok": True, "deleted_id":id }
 
 
-# 增加查询功能
+# 查询功能
 # def search_records(db: Session, answer: str):
 #     return db.query(models.Record).filter(models.Record.answer.ilike(f"%{answer}%")).order_by(desc(models.Record.updated_at)).all()
 
@@ -54,7 +54,7 @@ def get_records_by_search(db: Session, search: str):
         )
     ).all()
 
-# 新增：创建音频转写记录
+# 创建音频转写记录
 def create_transcription(db: Session, transcription: schemas.TranscriptionCreate):
     db_transcription = models.Transcription(text=transcription.text)
     db.add(db_transcription)
@@ -62,11 +62,10 @@ def create_transcription(db: Session, transcription: schemas.TranscriptionCreate
     db.refresh(db_transcription)
     return db_transcription
 
-# 新增：获取所有音频转写记录
+# 获取所有音频转写记录
 def get_transcriptions(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Transcription).offset(skip).limit(limit).all()
 
-# 其余代码保持不变
 
 
 # 更多session API

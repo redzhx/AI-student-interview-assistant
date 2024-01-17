@@ -1,38 +1,41 @@
 # backend/main.py
-from fastapi import FastAPI, Request, Depends, HTTPException, UploadFile, File,Query
+from fastapi import FastAPI, Request, Depends, HTTPException, UploadFile, File,Query,status
 from fastapi.responses import HTMLResponse, JSONResponse,StreamingResponse,FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
-from typing import Optional
-from server import crud, models, schemas
-from server.database import SessionLocal, engine
-from utils.question_manager import get_random_question, get_random_questions
-from utils.ai_minimax import text_to_speech as minimax_tts
+from typing import Optional, Annotated
+from server import crud, models, schemas,auth
+from server.database import SessionLocal, engine, get_db
+from server.schemas import User
+from server.auth import get_current_active_user
 from sqlalchemy.orm import Session
 from dotenv import load_dotenv
 from pathlib import Path
-
+from utils.ai_minimax import text_to_speech as minimax_tts
+from utils.question_manager import get_random_question, get_random_questions
 from utils.ai_zhipuai import call_zhipuai
 from utils.ai_openai import OpenAIServices
 import shutil
 import os
 import uvicorn
-
+from server.auth import router as auth_router
 
 
 app = FastAPI()
+app.include_router(auth_router)
+
 openai_services = OpenAIServices()
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
 
 
 #Dependency
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+# def get_db():
+#     db = SessionLocal()
+#     try:
+#         yield db
+#     finally:
+#         db.close()
 
 load_dotenv()
 
@@ -49,7 +52,6 @@ class TextToSpeechRequest(BaseModel):
 
 models.Base.metadata.create_all(bind=engine)
 
-# CORS 配置
 
 # CORS配置
 # 允许的源列表
@@ -195,8 +197,6 @@ async def tts_endpoint(request_data: TextToSpeechRequest):
     return FileResponse(path=audio_file_path, media_type="audio/mpeg", filename=file_path.name)
 
 
-
-
 # minimax
 @app.post("/api/text-to-speech/minimax")
 async def tts_minimax_endpoint(request_data: TextToSpeechRequest):
@@ -246,6 +246,16 @@ async def search(request: Request, anwser: str, db: Session = Depends(get_db)):
     records = crud.search_records(db, anwser)
     # 返回 JSON 数据而不是 HTML
     return {"records": records}
+
+
+
+
+@app.get("/users/me/items/")
+async def read_own_items(
+    current_user: Annotated[User, Depends(get_current_active_user)]
+):
+    return [{"item_id": "Foo", "owner": current_user.username}]
+
 
 
 if __name__ == "__main__":

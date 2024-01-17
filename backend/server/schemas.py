@@ -13,7 +13,6 @@ class RecordCreate(RecordBase):
     content: str
     
 
-
 class Record(RecordBase):
     id: int
     timestamp: datetime
@@ -28,6 +27,32 @@ class Transcription(BaseModel):
 
 class TranscriptionCreate(BaseModel):
     text: str
+
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    username: str | None = None
+
+
+class User(BaseModel):
+    username: str
+    email: str | None = None
+    full_name: str | None = None
+    disabled: bool | None = None
+
+
+class UserCreate(BaseModel):
+    username: str
+    password: str
+    
+class UserInDB(User):
+    hashed_password: str
+
 
 
 class Config:

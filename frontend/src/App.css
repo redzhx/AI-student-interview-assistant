@@ -50,6 +50,9 @@ body {
 
 }
 
+.feature{
+  background-color: #dee9ff
+}
 
 #hint{
   background-color:  #f6f8f8
@@ -78,6 +81,7 @@ body {
   bottom: 0;
   left: 0;
   width: 100%;
+  background-color: #f1f4ff;
 }
 
 .break-words {
@@ -238,4 +242,9 @@ body {
 
 .tab-with-answer {
   background-color: #ebf0ff
+}
+
+
+.gray-text-icon, .gray-text-icon i {
+  color: #ccc !important;
 }

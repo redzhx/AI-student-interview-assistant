@@ -7,3 +7,6 @@ SQLAlchemy==2.0.18
 uvicorn==0.25.0
 zhipuai==1.0.7
 python-multipart==0.0.5
+python-jose[cryptography]
+passlib[bcrypt]
+databases

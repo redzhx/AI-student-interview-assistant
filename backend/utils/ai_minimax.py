@@ -15,10 +15,10 @@ def text_to_speech(text, file_path):
         "Content-Type": "application/json",
     }
     data = {
-        "voice_id": "male-qn-qingse",
+        "voice_id": "male-qn-jingying",
         "text": text,  # 使用传入的文本
         "model": "speech-01",
-        "speed": 1.0,
+        "speed": 1.1,
         "vol": 1.0,
         "pitch": 0,
         "timber_weights": [

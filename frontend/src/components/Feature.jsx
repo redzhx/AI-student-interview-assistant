@@ -1,10 +1,18 @@
 import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css'; // 导入 Bootstrap 样式
+// import 'bootstrap/dist/css/bootstrap.min.css'; // 导入 Bootstrap 样式
+import { Button, Container, Row, Col } from "react-bootstrap";
+
 
 
 const FeatureSection = () => {
   return (
-    <div className="py-md-5 bg-secondary">
+    <>
+      <div className="position-relative feature">
+       
+          {/* Hero for FREE version */}
+          <section className="section section-hero section-shaped ">
+            
+    <Container className="shape-container align-items-center py-lg">
       <div className="container mt-5">
         <div className="row mt-5">
           <div className=" text-center col-12 col-md-6 col-lg-4 mb-4 mb-lg-0">
@@ -54,7 +62,11 @@ const FeatureSection = () => {
           <div className='me-4'>无论是准备自招面试，还是日常练习思辨能力，面小狮都是你的理想助手。让面小狮陪你一同开启升学之旅，成就未来的梦想！</div>
         </div>
       </div>
+    </Container>
+
+    </section>
     </div>
+    </>
   );
 };
 

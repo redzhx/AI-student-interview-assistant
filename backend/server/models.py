@@ -22,3 +22,11 @@ class Transcription(Base):
     id = Column(Integer, primary_key=True, index=True)
     text = Column(Text)  # 存储转写文本
     created_at = Column(DateTime(timezone=False), server_default=func.now())
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True)
+    # email = Column(String, unique=True, index=True)
+    hashed_password = Column(String)

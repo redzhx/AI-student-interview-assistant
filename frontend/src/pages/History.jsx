@@ -73,7 +73,7 @@ function History() {
     : records;
 
   return (
-    <section class="section section-lg" id="history">
+    <section className="section section-lg mb-4 history">
       <div class="col-12 text-center mt-4 mb-4 mb-lg-5">
         <h2>练习记录</h2>
           <p class="lead">⭐️强化记忆小妙招：回顾、分享、交流⭐️</p>
