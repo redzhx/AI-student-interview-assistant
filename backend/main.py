@@ -80,10 +80,7 @@ app.mount("/static", StaticFiles(directory="../frontend/build"), name="static")
 async def root():
     return FileResponse('frontend/build/index.html')
 
-
-
 # 答题页面路由 react
-
 @app.get("/api/get-question")
 async def get_question():
     question = get_random_question()
@@ -138,7 +135,7 @@ async def cancel_generate_request():
     cancel_generate = True  # 设置取消生成标志为 True
     return {"message": "Cancel generate request received"}
 
-
+# generate hint
 @app.post('/api/generate-hint')
 async def generate_hint(item: Item):
     # 设置 generate-hint 的 user_prompt
@@ -154,7 +151,7 @@ async def generate_hint(item: Item):
     return StreamingResponse(stream())
 
 
-
+# generate question
 @app.post('/api/ai-question')
 async def ai_question(item: Item):
     # 这里可以根据需要定制AI生成题目的逻辑
@@ -174,7 +171,7 @@ async def ai_question(item: Item):
     return StreamingResponse(stream())
 
 
-# 创建新的数据 ok
+# 创建新的数据 
 @app.post("/api/create", response_model=schemas.Record)
 def create_record(
     record: schemas.RecordCreate, db:Session = Depends(get_db)
@@ -182,7 +179,7 @@ def create_record(
     db_record  = crud.create_record(db=db, record=record)
     return db_record
 
-# 文字转语音 ok
+# 文字转语音
 @app.post("/api/text-to-speech")
 async def tts_endpoint(request_data: TextToSpeechRequest):
     text = request_data.text
@@ -225,7 +222,6 @@ async def upload_audio(audioFile: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=str(e))
 
 # 频转写文本的保存
-
 @app.post("/api/create-transcription", response_model=schemas.Transcription)
 def create_transcription_endpoint(transcription: schemas.TranscriptionCreate, db: Session = Depends(get_db)):
     return crud.create_transcription(db=db, transcription=transcription)
@@ -248,14 +244,11 @@ async def search(request: Request, anwser: str, db: Session = Depends(get_db)):
     return {"records": records}
 
 
-
-
 @app.get("/users/me/items/")
 async def read_own_items(
     current_user: Annotated[User, Depends(get_current_active_user)]
 ):
     return [{"item_id": "Foo", "owner": current_user.username}]
-
 
 
 if __name__ == "__main__":

@@ -2,11 +2,15 @@
 from sqlalchemy import Column, Integer, String, DateTime, Text, func
 from .database import Base
 from datetime import datetime
+from sqlalchemy.dialects.postgresql import UUID
+import uuid
+
 
 class Record(Base):
     __tablename__ = "records"
 
     id = Column(Integer, primary_key=True, index=True)
+    # id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
     question = Column(String, index=True)
     answer = Column(String, index=True)  # 注意拼写
     content = Column(String)
@@ -25,8 +29,9 @@ class Transcription(Base):
 
 class User(Base):
     __tablename__ = "users"
-
     id = Column(Integer, primary_key=True, index=True)
+
+    # id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
     username = Column(String, unique=True, index=True)
     # email = Column(String, unique=True, index=True)
     hashed_password = Column(String)

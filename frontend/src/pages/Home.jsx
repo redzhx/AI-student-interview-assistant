@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Button,  } from 'react-bootstrap';
 import Footer from '../components/Footer.jsx';
 import Feature from '../components/Feature.jsx';
-import SimpleFooter from '../components/Footers/SimpleFooter.js';
 
 function Home() {
   const navigate = useNavigate();
@@ -48,7 +47,6 @@ function Home() {
 
       <div className='my-10'><Feature/></div>
       <div className=''><Footer /></div>
-      <div className=''><SimpleFooter /></div>
 
     </div>
   );

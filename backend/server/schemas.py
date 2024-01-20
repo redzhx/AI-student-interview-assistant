@@ -1,5 +1,5 @@
 # schemas.py
-from pydantic import BaseModel
+from pydantic import BaseModel,UUID4
 from datetime import datetime
 
 class RecordBase(BaseModel):
@@ -8,13 +8,11 @@ class RecordBase(BaseModel):
     content: str
 
 class RecordCreate(RecordBase):
-    question: str
-    answer: str
-    content: str
+    pass # 如果没有额外字段，可以省略此处
     
 
 class Record(RecordBase):
-    id: int
+    id: UUID4  # 更新为UUID类型
     timestamp: datetime
     created_at: datetime
     updated_at: datetime
@@ -51,6 +49,7 @@ class UserCreate(BaseModel):
     password: str
     
 class UserInDB(User):
+    id: UUID4  # 更新为UUID类型
     hashed_password: str
 
 
